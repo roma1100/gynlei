@@ -2,10 +2,12 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Музей Будущего</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Музей Будущего — Все экраны</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   :root {
     --bg: #050810;
     --surface: #0d1220;
@@ -16,70 +18,134 @@
     --text: #e2e8f0;
     --muted: #64748b;
     --glow: 0 0 20px rgba(0,229,255,0.3);
+    --divider: #1e293b;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--bg);
+    background: #050810;
+    background-image: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,229,255,0.05) 0%, transparent 70%);
     font-family: 'Syne', sans-serif;
     color: var(--text);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
     min-height: 100vh;
-    padding: 20px;
-    gap: 24px;
-    flex-wrap: wrap;
+    padding: 48px 32px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  /* PHONE FRAME */
-  .phone {
-    width: 390px;
-    height: 844px;
-    background: var(--bg);
-    border-radius: 50px;
-    border: 2px solid #1e293b;
-    overflow: hidden;
-    position: relative;
-    flex-shrink: 0;
-    display: none;
-    flex-direction: column;
-    box-shadow: 0 0 60px rgba(0,229,255,0.08), 0 40px 80px rgba(0,0,0,0.6);
+  /* PAGE TITLE */
+  .page-title {
+    text-align: center;
+    margin-bottom: 48px;
   }
-  .phone.active { display: flex; }
+  .page-title h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 26px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #00e5ff, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .page-title p {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .ornament { color: var(--accent); font-size: 18px; letter-spacing: 10px; display: block; margin: 8px 0; opacity: 0.5; }
+
+  /* SCREENS ROW */
+  .screens-row {
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 24px;
+    width: 100%;
+  }
+
+  /* SCREEN WRAPPER */
+  .screen-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+  .screen-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+  }
+  .screen-num {
+    display: block;
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  /* ─── PHONE SHELL ─── */
+  .phone {
+    width: 320px;
+    height: 693px;
+    border-radius: 44px;
+    background: var(--bg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #1e293b;
+    box-shadow:
+      0 0 0 4px #0a0f1a,
+      0 0 40px rgba(0,229,255,0.07),
+      0 24px 60px rgba(0,0,0,0.8);
+  }
 
   /* STATUS BAR */
   .status-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 28px 0;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    padding: 12px 24px 4px;
     flex-shrink: 0;
   }
-  .status-time { font-family: 'Orbitron', monospace; font-size: 14px; }
-  .status-icons { display: flex; gap: 6px; align-items: center; }
-  .status-icons span { font-size: 11px; }
+  .status-time {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: var(--text);
+    letter-spacing: 0.05em;
+  }
+  .status-icons { font-size: 10px; color: var(--muted); letter-spacing: 3px; }
 
-  /* SCROLLABLE CONTENT */
-  .screen-content {
+  /* SCROLL AREA */
+  .scroll-area {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent2) transparent;
   }
-  .screen-content::-webkit-scrollbar { display: none; }
+  .scroll-area::-webkit-scrollbar { width: 3px; }
+  .scroll-area::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 4px; }
 
   /* BOTTOM NAV */
   .bottom-nav {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 12px 0 28px;
+    padding: 10px 0 20px;
     background: rgba(13,18,32,0.95);
-    border-top: 1px solid #1e293b;
+    border-top: 1px solid var(--divider);
     backdrop-filter: blur(20px);
     flex-shrink: 0;
   }
@@ -87,33 +153,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    padding: 4px 12px;
-    border-radius: 12px;
-    transition: all 0.2s;
+    gap: 3px;
   }
+  .nav-icon { font-size: 18px; color: var(--muted); }
+  .nav-label { font-size: 9px; color: var(--muted); letter-spacing: 0.05em; }
   .nav-item.active .nav-icon { color: var(--accent); }
   .nav-item.active .nav-label { color: var(--accent); }
-  .nav-icon { font-size: 22px; color: var(--muted); }
-  .nav-label { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; }
 
-  /* ───────────────────────────────
-     SCREEN 1 — HOME / EXPLORE
-  ─────────────────────────────── */
-  .home-header {
-    padding: 20px 24px 16px;
-  }
-  .home-greeting {
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
+  /* ══════════════════════════════
+     SCREEN 1 — HOME
+  ══════════════════════════════ */
+  .home-header { padding: 16px 20px 12px; }
+  .home-greeting { font-size: 11px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 4px; }
   .home-title {
     font-family: 'Orbitron', monospace;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 900;
     background: linear-gradient(135deg, #00e5ff, #7c3aed);
     -webkit-background-clip: text;
@@ -121,20 +175,17 @@
     line-height: 1.2;
   }
 
-  /* HERO BANNER */
   .hero-banner {
-    margin: 0 24px 20px;
-    border-radius: 24px;
-    height: 200px;
+    margin: 0 16px 16px;
+    border-radius: 20px;
+    height: 170px;
     position: relative;
     overflow: hidden;
-    cursor: pointer;
     background: linear-gradient(135deg, #0a1628 0%, #1a0a3c 50%, #0a1628 100%);
     border: 1px solid rgba(0,229,255,0.2);
   }
   .hero-bg {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background:
       radial-gradient(ellipse 60% 60% at 80% 50%, rgba(0,229,255,0.15) 0%, transparent 70%),
       radial-gradient(ellipse 40% 60% at 20% 30%, rgba(124,58,237,0.2) 0%, transparent 70%);
@@ -142,1337 +193,629 @@
   }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
   .hero-grid {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background-image:
       linear-gradient(rgba(0,229,255,0.05) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0,229,255,0.05) 1px, transparent 1px);
-    background-size: 30px 30px;
+    background-size: 28px 28px;
   }
   .hero-content {
-    position: absolute;
-    inset: 0;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    position: absolute; inset: 0;
+    padding: 18px 16px;
+    display: flex; flex-direction: column; justify-content: flex-end;
   }
   .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    display: inline-flex; align-items: center; gap: 5px;
     background: rgba(0,229,255,0.15);
     border: 1px solid rgba(0,229,255,0.3);
     color: var(--accent);
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    width: fit-content;
+    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 20px; margin-bottom: 8px; width: fit-content;
   }
-  .hero-name {
-    font-family: 'Orbitron', monospace;
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 4px;
-  }
-  .hero-sub { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .hero-name { font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+  .hero-sub { font-size: 11px; color: rgba(255,255,255,0.55); }
   .hero-ar-badge {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: rgba(245,158,11,0.2);
-    border: 1px solid rgba(245,158,11,0.4);
-    color: var(--accent3);
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 4px 8px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.4);
+    color: var(--accent3); font-size: 8px; padding: 3px 7px; border-radius: 6px;
+    letter-spacing: 0.08em;
   }
 
-  /* SECTION TITLE */
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 24px;
-    margin-bottom: 14px;
+  .sec-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 20px; margin-bottom: 12px;
   }
-  .section-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text);
+  .sec-title {
+    font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--text);
   }
-  .section-link {
-    font-size: 11px;
-    color: var(--accent);
-    cursor: pointer;
-    letter-spacing: 0.05em;
-  }
+  .sec-link { font-size: 11px; color: var(--accent); }
 
-  /* HORIZONTAL SCROLL CARDS */
   .h-scroll {
-    display: flex;
-    gap: 14px;
-    padding: 0 24px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    margin-bottom: 24px;
+    display: flex; gap: 12px; padding: 0 20px;
+    overflow-x: auto; scrollbar-width: none; margin-bottom: 18px;
   }
   .h-scroll::-webkit-scrollbar { display: none; }
 
-  /* EXHIBIT CARD */
-  .exhibit-card {
-    width: 160px;
-    flex-shrink: 0;
-    background: var(--card);
-    border-radius: 20px;
-    overflow: hidden;
-    cursor: pointer;
-    border: 1px solid #1e293b;
-    transition: transform 0.2s, border-color 0.2s;
+  .ex-card {
+    width: 130px; flex-shrink: 0;
+    background: var(--card); border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--divider); cursor: pointer;
   }
-  .exhibit-card:active { transform: scale(0.97); }
-  .exhibit-img {
-    height: 110px;
-    position: relative;
-    overflow: hidden;
+  .ex-img {
+    height: 90px; position: relative;
+    display: flex; align-items: center; justify-content: center; font-size: 36px;
   }
-  .ex1 { background: linear-gradient(135deg, #0e2744, #1a3a5c); }
-  .ex2 { background: linear-gradient(135deg, #1a0a2e, #3b1f6e); }
-  .ex3 { background: linear-gradient(135deg, #0a2a1a, #1a5c3a); }
-  .ex4 { background: linear-gradient(135deg, #2a1a00, #5c3a00); }
-  .exhibit-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    font-size: 40px;
-    opacity: 0.8;
+  .ex-bg1 { background: linear-gradient(135deg, #0e2744, #1a3a5c); }
+  .ex-bg2 { background: linear-gradient(135deg, #1a0a2e, #3b1f6e); }
+  .ex-bg3 { background: linear-gradient(135deg, #0a2a1a, #1a5c3a); }
+  .ex-bg4 { background: linear-gradient(135deg, #2a1a00, #5c3a00); }
+  .ex-ar {
+    position: absolute; top: 6px; right: 6px;
+    background: rgba(0,229,255,0.2); border: 1px solid rgba(0,229,255,0.4);
+    color: var(--accent); font-size: 7px; padding: 2px 5px; border-radius: 5px; letter-spacing: 0.08em;
   }
-  .exhibit-ar {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(0,229,255,0.2);
-    border: 1px solid rgba(0,229,255,0.4);
-    color: var(--accent);
-    font-size: 8px;
-    padding: 2px 6px;
-    border-radius: 6px;
-    letter-spacing: 0.1em;
-  }
-  .exhibit-info { padding: 12px; }
-  .exhibit-cat {
-    font-size: 9px;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .exhibit-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.3;
-  }
+  .ex-info { padding: 10px; }
+  .ex-cat { font-size: 8px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 3px; }
+  .ex-name { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.3; }
 
-  /* TODAY EVENTS */
-  .event-card {
-    margin: 0 24px 12px;
-    background: var(--card);
-    border-radius: 16px;
-    padding: 14px 16px;
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    cursor: pointer;
-    border: 1px solid #1e293b;
-    transition: border-color 0.2s;
+  .ev-card {
+    margin: 0 20px 10px;
+    background: var(--card); border-radius: 14px; padding: 12px 14px;
+    display: flex; gap: 12px; align-items: center;
+    border: 1px solid var(--divider);
   }
-  .event-card:active { border-color: var(--accent); }
-  .event-time-block {
-    width: 50px;
-    flex-shrink: 0;
-    text-align: center;
-  }
-  .event-time {
-    font-family: 'Orbitron', monospace;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--accent);
-    display: block;
-    margin-bottom: 2px;
-  }
-  .event-ampm { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; }
-  .event-divider { width: 1px; background: #1e293b; align-self: stretch; }
-  .event-body { flex: 1; }
-  .event-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
-  .event-meta { font-size: 11px; color: var(--muted); }
-  .event-badge {
-    font-size: 9px;
-    padding: 3px 8px;
-    border-radius: 8px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    flex-shrink: 0;
-  }
-  .badge-live {
-    background: rgba(239,68,68,0.2);
-    color: #ef4444;
-    border: 1px solid rgba(239,68,68,0.3);
-  }
-  .badge-soon {
-    background: rgba(245,158,11,0.15);
-    color: var(--accent3);
-    border: 1px solid rgba(245,158,11,0.3);
-  }
+  .ev-time-block { width: 42px; flex-shrink: 0; text-align: center; }
+  .ev-time { font-family: 'Orbitron', monospace; font-size: 12px; color: var(--accent); display: block; margin-bottom: 1px; font-weight: 700; }
+  .ev-ampm { font-size: 8px; color: var(--muted); letter-spacing: 0.1em; }
+  .ev-div { width: 1px; background: var(--divider); align-self: stretch; }
+  .ev-body { flex: 1; }
+  .ev-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+  .ev-meta { font-size: 10px; color: var(--muted); }
+  .ev-badge { font-size: 8px; padding: 3px 6px; border-radius: 6px; font-weight: 600; letter-spacing: 0.05em; flex-shrink: 0; }
+  .badge-live { background: rgba(239,68,68,0.2); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+  .badge-soon { background: rgba(245,158,11,0.15); color: var(--accent3); border: 1px solid rgba(245,158,11,0.3); }
 
-  /* ───────────────────────────────
-     SCREEN 2 — EXHIBIT DETAIL
-  ─────────────────────────────── */
+  /* ══════════════════════════════
+     SCREEN 2 — DETAIL
+  ══════════════════════════════ */
   .detail-hero {
-    height: 280px;
+    height: 220px;
     background: linear-gradient(160deg, #0d1f3c, #1a0d3c, #0a1a2e);
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; border-bottom: 1px solid var(--divider);
   }
   .detail-hero-bg {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background:
       radial-gradient(ellipse 70% 70% at 60% 40%, rgba(0,229,255,0.12) 0%, transparent 70%),
       radial-gradient(ellipse 50% 50% at 30% 70%, rgba(124,58,237,0.18) 0%, transparent 70%);
   }
-  .detail-hero-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 90px;
-    opacity: 0.7;
-    animation: float 3s ease-in-out infinite;
-  }
-  @keyframes float { 0%,100%{transform:translate(-50%,-50%) translateY(0)} 50%{transform:translate(-50%,-50%) translateY(-10px)} }
+  .detail-icon { font-size: 80px; position: relative; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(0,229,255,0.3)); }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
   .detail-back {
-    position: absolute;
-    top: 56px;
-    left: 20px;
-    width: 36px;
-    height: 36px;
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
+    position: absolute; top: 14px; left: 16px;
+    width: 32px; height: 32px;
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    color: var(--text); font-size: 14px; cursor: pointer; backdrop-filter: blur(10px);
   }
-  .detail-ar-btn {
-    position: absolute;
-    top: 56px;
-    right: 20px;
-    background: rgba(0,229,255,0.15);
-    border: 1px solid rgba(0,229,255,0.4);
-    color: var(--accent);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 8px 14px;
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    backdrop-filter: blur(10px);
-    font-family: 'Orbitron', monospace;
-    font-weight: 700;
+  .detail-body { padding: 18px 20px; }
+  .detail-period {
+    font-size: 9px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
   }
-  .detail-body { padding: 24px; }
-  .detail-cat {
-    font-size: 10px;
-    color: var(--accent);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .detail-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 22px;
-    font-weight: 900;
-    line-height: 1.2;
-    margin-bottom: 6px;
-  }
-  .detail-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .detail-period::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); }
+  .detail-title { font-family: 'Orbitron', monospace; font-size: 20px; font-weight: 900; line-height: 1.15; margin-bottom: 4px; }
+  .detail-sub { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
   .detail-stats {
-    display: flex;
-    gap: 0;
-    background: var(--card);
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid #1e293b;
-    margin-bottom: 20px;
+    display: flex; background: var(--card); border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--divider); margin-bottom: 14px;
   }
-  .stat-item {
-    flex: 1;
-    padding: 14px;
-    text-align: center;
-    border-right: 1px solid #1e293b;
-  }
-  .stat-item:last-child { border-right: none; }
-  .stat-value {
-    font-family: 'Orbitron', monospace;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--accent);
-    display: block;
-    margin-bottom: 2px;
-  }
-  .stat-label { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-  .detail-desc {
-    font-size: 14px;
-    line-height: 1.7;
-    color: rgba(226,232,240,0.8);
-    margin-bottom: 20px;
-  }
-  .detail-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-  .tag {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    letter-spacing: 0.05em;
-  }
-  .tag-blue { background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); color: var(--accent); }
-  .tag-purple { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); color: #a78bfa; }
-  .tag-amber { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: var(--accent3); }
+  .dstat { flex: 1; padding: 10px 6px; text-align: center; border-right: 1px solid var(--divider); }
+  .dstat:last-child { border-right: none; }
+  .dstat-val { font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700; color: var(--accent); display: block; margin-bottom: 2px; }
+  .dstat-label { font-size: 8px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .detail-desc { font-size: 13px; line-height: 1.7; color: rgba(226,232,240,0.8); margin-bottom: 14px; }
+  .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .dtag { padding: 4px 10px; border-radius: 20px; font-size: 10px; letter-spacing: 0.04em; }
+  .dtag-blue { background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); color: var(--accent); }
+  .dtag-purple { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); color: #a78bfa; }
+  .dtag-amber { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: var(--accent3); }
   .btn-primary {
-    width: 100%;
-    padding: 16px;
+    width: 100%; padding: 13px;
     background: linear-gradient(135deg, #00b4d8, #7c3aed);
-    border: none;
-    border-radius: 16px;
-    color: #fff;
-    font-family: 'Orbitron', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: 0 4px 20px rgba(0,229,255,0.2);
+    border: none; border-radius: 14px; color: #fff;
+    font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+    margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 4px 16px rgba(0,229,255,0.2);
   }
   .btn-secondary {
-    width: 100%;
-    padding: 14px;
-    background: transparent;
-    border: 1px solid #1e293b;
-    border-radius: 16px;
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    width: 100%; padding: 11px;
+    background: transparent; border: 1px solid var(--divider); border-radius: 14px;
+    color: var(--text); font-size: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
   }
 
-  /* ───────────────────────────────
-     SCREEN 3 — MAP / NAVIGATION
-  ─────────────────────────────── */
-  .map-header {
-    padding: 56px 24px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+  /* ══════════════════════════════
+     SCREEN 3 — MAP
+  ══════════════════════════════ */
+  .map-top {
+    padding: 14px 20px 14px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    border-bottom: 1px solid var(--divider);
   }
-  .map-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 20px;
-    font-weight: 900;
-  }
-  .map-floor-picker {
-    display: flex;
-    gap: 6px;
-  }
-  .floor-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-    border: 1px solid #1e293b;
-    background: var(--card);
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .map-bar-title { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 900; }
+  .floor-tabs { display: flex; gap: 5px; }
+  .ftab {
+    width: 30px; height: 30px; border-radius: 8px;
+    border: 1px solid var(--divider); background: var(--card);
+    color: var(--muted); font-size: 10px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
     font-family: 'Orbitron', monospace;
   }
-  .floor-btn.active {
-    background: rgba(0,229,255,0.15);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+  .ftab.active { background: rgba(0,229,255,0.15); border-color: var(--accent); color: var(--accent); }
+
   .map-container {
-    margin: 0 24px 16px;
-    height: 340px;
-    background: var(--card);
-    border-radius: 24px;
-    border: 1px solid #1e293b;
-    position: relative;
-    overflow: hidden;
+    margin: 14px;
+    height: 268px;
+    background: var(--card); border-radius: 20px;
+    border: 1px solid var(--divider); position: relative; overflow: hidden;
   }
   .map-grid {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background-image:
       linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-size: 22px 22px;
   }
-  /* Rooms on map */
-  .map-room {
-    position: absolute;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 10px;
-    text-align: center;
-    gap: 4px;
-    transition: all 0.2s;
-    padding: 6px;
+  .mroom {
+    position: absolute; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; text-align: center; gap: 3px; padding: 5px; transition: all 0.2s;
   }
-  .map-room:hover, .map-room.selected { border-color: var(--accent); box-shadow: 0 0 12px rgba(0,229,255,0.2); }
-  .room-icon { font-size: 22px; }
-  .room-name { font-size: 8px; color: var(--muted); letter-spacing: 0.05em; line-height: 1.2; }
-  .r-cosmos { background: rgba(0,100,200,0.2); top: 20px; left: 20px; width: 100px; height: 80px; }
-  .r-bio    { background: rgba(0,150,80,0.2); top: 20px; left: 130px; width: 80px; height: 90px; }
-  .r-ai     { background: rgba(124,58,237,0.2); top: 20px; right: 20px; width: 80px; height: 80px; }
-  .r-time   { background: rgba(245,158,11,0.2); top: 120px; left: 20px; width: 90px; height: 80px; }
-  .r-enter  { background: rgba(0,229,255,0.1); bottom: 20px; left: 50%; transform: translateX(-50%); width: 100px; height: 50px; border-color: rgba(0,229,255,0.3); }
+  .mroom.sel { border-color: var(--accent); box-shadow: 0 0 10px rgba(0,229,255,0.2); }
+  .mroom-icon { font-size: 20px; }
+  .mroom-name { font-size: 7px; color: var(--muted); letter-spacing: 0.04em; line-height: 1.2; }
+  .mr-cosmos  { background: rgba(0,100,200,0.2); top: 18px; left: 14px; width: 88px; height: 70px; }
+  .mr-bio     { background: rgba(0,150,80,0.2); top: 18px; left: 110px; width: 72px; height: 78px; }
+  .mr-ai      { background: rgba(124,58,237,0.2); top: 18px; right: 14px; width: 72px; height: 70px; }
+  .mr-time    { background: rgba(245,158,11,0.2); top: 106px; left: 14px; width: 80px; height: 70px; }
+  .mr-enter   { background: rgba(0,229,255,0.08); bottom: 14px; left: 50%; transform: translateX(-50%); width: 90px; height: 44px; border-color: rgba(0,229,255,0.3); }
   .you-dot {
     position: absolute;
-    width: 16px;
-    height: 16px;
-    background: var(--accent);
-    border-radius: 50%;
-    border: 3px solid #fff;
-    box-shadow: 0 0 14px var(--accent);
-    top: 160px;
-    left: 150px;
+    width: 13px; height: 13px;
+    background: var(--accent); border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 12px var(--accent);
+    top: 150px; left: 148px;
     animation: ping 2s ease-in-out infinite;
   }
-  @keyframes ping { 0%,100%{box-shadow:0 0 14px var(--accent)} 50%{box-shadow:0 0 24px var(--accent),0 0 40px rgba(0,229,255,0.3)} }
+  @keyframes ping { 0%,100%{box-shadow:0 0 12px var(--accent)} 50%{box-shadow:0 0 22px var(--accent), 0 0 36px rgba(0,229,255,0.25)} }
 
-  /* ROOM LIST */
-  .room-list-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 24px;
-    cursor: pointer;
-    transition: background 0.15s;
+  .room-row {
+    display: flex; align-items: center; gap: 12px; padding: 11px 20px;
+    cursor: pointer; border-bottom: 1px solid var(--divider);
   }
-  .room-list-item:active { background: rgba(255,255,255,0.03); }
-  .room-list-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
+  .room-row:last-child { border-bottom: none; }
+  .rrow-icon {
+    width: 38px; height: 38px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
     flex-shrink: 0;
   }
-  .room-list-info { flex: 1; }
-  .room-list-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-  .room-list-sub { font-size: 11px; color: var(--muted); }
-  .room-list-arrow { color: var(--muted); font-size: 16px; }
+  .rrow-info { flex: 1; }
+  .rrow-name { font-size: 13px; font-weight: 600; margin-bottom: 1px; }
+  .rrow-meta { font-size: 10px; color: var(--muted); }
+  .rrow-arrow { color: var(--muted); font-size: 14px; }
 
-  /* ───────────────────────────────
-     SCREEN 4 — AR VIEW (overlay)
-  ─────────────────────────────── */
-  .ar-screen {
-    position: relative;
-    height: 100%;
-    background: #000;
-    display: flex;
-    flex-direction: column;
-  }
+  /* ══════════════════════════════
+     SCREEN 4 — AR VIEW
+  ══════════════════════════════ */
   .ar-viewfinder {
     flex: 1;
     position: relative;
-    background:
-      linear-gradient(160deg, #060d1a 0%, #0a0520 50%, #060d1a 100%);
+    background: linear-gradient(160deg, #060d1a 0%, #0a0520 50%, #060d1a 100%);
     overflow: hidden;
+    display: flex; flex-direction: column;
   }
   .ar-scan-line {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 2px;
+    position: absolute; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
     animation: scan 3s linear infinite;
     box-shadow: 0 0 10px var(--accent);
   }
   @keyframes scan { 0%{top:-2px} 100%{top:100%} }
-  .ar-corner {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    border-color: var(--accent);
-    border-style: solid;
-    opacity: 0.7;
-  }
-  .ar-corner.tl { top: 60px; left: 60px; border-width: 2px 0 0 2px; }
-  .ar-corner.tr { top: 60px; right: 60px; border-width: 2px 2px 0 0; }
-  .ar-corner.bl { bottom: 60px; left: 60px; border-width: 0 0 2px 2px; }
-  .ar-corner.br { bottom: 60px; right: 60px; border-width: 0 2px 2px 0; }
+  .ar-corner { position: absolute; width: 26px; height: 26px; border-color: var(--accent); border-style: solid; opacity: 0.7; }
+  .ar-corner.tl { top: 56px; left: 50px; border-width: 2px 0 0 2px; }
+  .ar-corner.tr { top: 56px; right: 50px; border-width: 2px 2px 0 0; }
+  .ar-corner.bl { bottom: 96px; left: 50px; border-width: 0 0 2px 2px; }
+  .ar-corner.br { bottom: 96px; right: 50px; border-width: 0 2px 2px 0; }
   .ar-object {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 100px;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    font-size: 90px;
     animation: ar-float 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 30px rgba(0,229,255,0.5));
+    filter: drop-shadow(0 0 28px rgba(0,229,255,0.5));
   }
-  @keyframes ar-float { 0%,100%{transform:translate(-50%,-50%) rotateY(0)} 50%{transform:translate(-50%,-52%) rotateY(20deg)} }
+  @keyframes ar-float { 0%,100%{transform:translate(-50%,-60%) rotateY(0)} 50%{transform:translate(-50%,-62%) rotateY(18deg)} }
   .ar-label-card {
-    position: absolute;
-    top: 180px;
-    right: 20px;
-    background: rgba(13,18,32,0.85);
-    border: 1px solid rgba(0,229,255,0.3);
-    border-radius: 14px;
-    padding: 10px 14px;
-    backdrop-filter: blur(16px);
-    max-width: 140px;
+    position: absolute; top: 170px; right: 16px;
+    background: rgba(13,18,32,0.85); border: 1px solid rgba(0,229,255,0.3);
+    border-radius: 12px; padding: 9px 12px; backdrop-filter: blur(16px); max-width: 130px;
   }
-  .ar-label-title { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
-  .ar-label-text { font-size: 10px; color: rgba(226,232,240,0.7); line-height: 1.4; }
-  .ar-particles {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-  .particle {
-    position: absolute;
-    border-radius: 50%;
-    background: var(--accent);
-    opacity: 0.4;
-    animation: particle-anim linear infinite;
-  }
-  @keyframes particle-anim {
-    0% { transform: translateY(0) scale(1); opacity: 0.4; }
-    100% { transform: translateY(-300px) scale(0); opacity: 0; }
-  }
-  .ar-controls {
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    padding: 0 24px;
-  }
-  .ar-ctrl-btn {
-    flex: 1;
-    padding: 12px;
-    border-radius: 14px;
-    border: 1px solid rgba(0,229,255,0.3);
-    background: rgba(13,18,32,0.8);
-    color: var(--text);
-    font-size: 12px;
-    cursor: pointer;
-    text-align: center;
-    backdrop-filter: blur(10px);
-  }
-  .ar-ctrl-btn.primary-ar {
-    background: rgba(0,229,255,0.2);
-    color: var(--accent);
-    font-weight: 600;
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-  }
+  .ar-label-title { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; color: var(--accent); margin-bottom: 3px; }
+  .ar-label-text { font-size: 9px; color: rgba(226,232,240,0.7); line-height: 1.4; }
   .ar-top-bar {
-    position: absolute;
-    top: 56px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
+    position: absolute; top: 14px; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center; padding: 0 16px;
   }
   .ar-back-btn {
-    width: 36px;
-    height: 36px;
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
+    width: 32px; height: 32px;
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    color: var(--text); font-size: 14px; cursor: pointer; backdrop-filter: blur(10px);
   }
   .ar-mode-tag {
-    background: rgba(239,68,68,0.2);
-    border: 1px solid rgba(239,68,68,0.4);
-    color: #ef4444;
-    font-family: 'Orbitron', monospace;
-    font-size: 10px;
-    padding: 6px 12px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    letter-spacing: 0.1em;
+    background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.4);
+    color: #ef4444; font-family: 'Orbitron', monospace; font-size: 9px;
+    padding: 5px 10px; border-radius: 8px;
+    display: flex; align-items: center; gap: 5px; letter-spacing: 0.1em;
   }
-  .rec-dot { width: 6px; height: 6px; background: #ef4444; border-radius: 50%; animation: blink 1s ease-in-out infinite; }
+  .rec-dot { width: 5px; height: 5px; background: #ef4444; border-radius: 50%; animation: blink 1s ease-in-out infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .ar-controls {
+    position: absolute; bottom: 16px; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 10px; padding: 0 16px;
+  }
+  .ar-ctrl {
+    flex: 1; padding: 10px;
+    border-radius: 12px; border: 1px solid rgba(0,229,255,0.3);
+    background: rgba(13,18,32,0.8); color: var(--text);
+    font-size: 10px; cursor: pointer; text-align: center; backdrop-filter: blur(10px);
+  }
+  .ar-ctrl.active { background: rgba(0,229,255,0.18); color: var(--accent); font-weight: 600; font-family: 'Orbitron', monospace; font-size: 9px; }
 
-  /* ───────────────────────────────
-     SCREEN 5 — PROFILE / TICKETS
-  ─────────────────────────────── */
-  .profile-header {
-    padding: 56px 24px 24px;
-    background: linear-gradient(180deg, rgba(0,229,255,0.06) 0%, transparent 100%);
-    text-align: center;
+  /* ══════════════════════════════
+     SCREEN 5 — PROFILE
+  ══════════════════════════════ */
+  .profile-top {
+    padding: 14px 20px 20px;
+    background: linear-gradient(180deg, rgba(0,229,255,0.05) 0%, transparent 100%);
+    text-align: center; border-bottom: 1px solid var(--divider);
   }
   .avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+    width: 72px; height: 72px; border-radius: 50%;
     background: linear-gradient(135deg, #00b4d8, #7c3aed);
-    margin: 0 auto 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
+    margin: 0 auto 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 30px;
     border: 3px solid rgba(0,229,255,0.3);
-    box-shadow: 0 0 30px rgba(0,229,255,0.2);
+    box-shadow: 0 0 28px rgba(0,229,255,0.18);
   }
-  .profile-name {
-    font-family: 'Orbitron', monospace;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-  .profile-role { font-size: 12px; color: var(--muted); letter-spacing: 0.1em; }
-  .profile-stats {
-    display: flex;
-    gap: 0;
-    margin: 20px 24px;
-    background: var(--card);
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid #1e293b;
-  }
-  .pstat {
-    flex: 1;
-    padding: 16px 8px;
-    text-align: center;
-    border-right: 1px solid #1e293b;
-  }
-  .pstat:last-child { border-right: none; }
-  .pstat-val {
-    font-family: 'Orbitron', monospace;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--accent);
-    display: block;
-    margin-bottom: 4px;
-  }
-  .pstat-label { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .profile-name { font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+  .profile-role { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
 
-  /* TICKET */
-  .ticket-card {
-    margin: 0 24px 16px;
-    background: var(--card);
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid #1e293b;
-    cursor: pointer;
+  .pstats {
+    display: flex; margin: 12px 14px;
+    background: var(--card); border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--divider);
+  }
+  .ps { flex: 1; padding: 12px 6px; text-align: center; border-right: 1px solid var(--divider); }
+  .ps:last-child { border-right: none; }
+  .ps-val { font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; color: var(--accent); display: block; margin-bottom: 2px; }
+  .ps-label { font-size: 8px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .ticket {
+    margin: 0 14px 12px;
+    background: var(--card); border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--divider);
   }
   .ticket-top {
-    padding: 16px;
-    background: linear-gradient(135deg, rgba(0,100,200,0.2), rgba(124,58,237,0.2));
-    border-bottom: 1px dashed #1e293b;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 13px 14px;
+    background: linear-gradient(135deg, rgba(0,100,200,0.15), rgba(124,58,237,0.15));
+    border-bottom: 1px dashed var(--divider);
+    display: flex; justify-content: space-between; align-items: center;
   }
-  .ticket-event { font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700; }
-  .ticket-type { font-size: 10px; color: var(--accent); margin-top: 2px; letter-spacing: 0.1em; }
+  .ticket-event { font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+  .ticket-type { font-size: 9px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
   .ticket-qr {
-    width: 50px;
-    height: 50px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.05); border-radius: 7px;
     border: 1px solid rgba(255,255,255,0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
   }
   .ticket-bottom {
-    padding: 12px 16px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--muted);
+    padding: 9px 14px;
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: var(--muted);
   }
   .ticket-val { color: var(--text); font-weight: 600; }
 
-  /* MENU ITEMS */
-  .menu-section { margin-bottom: 8px; }
-  .menu-label {
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 8px 24px 4px;
+  .menu-lbl { font-size: 9px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; padding: 10px 20px 4px; }
+  .mrow {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 20px; border-bottom: 1px solid var(--divider); cursor: pointer;
   }
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 24px;
-    cursor: pointer;
-    transition: background 0.15s;
+  .mrow:last-child { border-bottom: none; }
+  .mrow-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+    border: 1px solid var(--divider); background: var(--surface);
   }
-  .menu-item:active { background: rgba(255,255,255,0.03); }
-  .menu-icon-wrap {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-  }
-  .mi-blue { background: rgba(0,229,255,0.1); }
-  .mi-purple { background: rgba(124,58,237,0.1); }
-  .mi-amber { background: rgba(245,158,11,0.1); }
-  .mi-red { background: rgba(239,68,68,0.1); }
-  .menu-text { flex: 1; font-size: 14px; }
-  .menu-arrow { color: var(--muted); font-size: 14px; }
-
-  /* SCREEN LABELS */
-  .screen-labels {
-    width: 160px;
-    padding-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex-shrink: 0;
-  }
-  .screen-label-btn {
-    padding: 12px 16px;
-    border-radius: 16px;
-    border: 1px solid #1e293b;
-    background: var(--card);
-    color: var(--muted);
-    font-size: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.2s;
-  }
-  .screen-label-btn.active {
-    border-color: var(--accent);
-    background: rgba(0,229,255,0.08);
-    color: var(--accent);
-  }
-  .screen-num {
-    font-family: 'Orbitron', monospace;
-    font-size: 10px;
-    width: 20px;
-    text-align: center;
-  }
-  .legend-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-    padding-top: 4px;
-  }
-  .prototype-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(124,58,237,0.15);
-    border: 1px solid rgba(124,58,237,0.3);
-    color: #a78bfa;
-    font-size: 9px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 20px;
-    margin-top: auto;
-  }
+  .mrow-text { flex: 1; font-size: 13px; }
+  .mrow-arrow { color: var(--muted); font-size: 13px; }
 </style>
 </head>
 <body>
 
-<!-- SCREEN SELECTOR -->
-<div class="screen-labels" id="legend">
-  <div class="legend-title">Экраны</div>
-  <div class="screen-label-btn active" onclick="showScreen('home', this)">
-    <span class="screen-num">01</span> Главная
-  </div>
-  <div class="screen-label-btn" onclick="showScreen('detail', this)">
-    <span class="screen-num">02</span> Экспонат
-  </div>
-  <div class="screen-label-btn" onclick="showScreen('map', this)">
-    <span class="screen-num">03</span> Навигация
-  </div>
-  <div class="screen-label-btn" onclick="showScreen('ar', this)">
-    <span class="screen-num">04</span> AR-режим
-  </div>
-  <div class="screen-label-btn" onclick="showScreen('profile', this)">
-    <span class="screen-num">05</span> Профиль
-  </div>
-  <div class="prototype-tag">Figma Prototype</div>
+<div class="page-title">
+  <h1>Музей Будущего</h1>
+  <span class="ornament">⬡ ⬡ ⬡</span>
+  <p>Прототип мобильного приложения · Все экраны</p>
 </div>
 
-<!-- ══════════════════════
-     SCREEN 1 — HOME
-══════════════════════ -->
-<div class="phone active" id="phone-home">
-  <div class="status-bar">
-    <span class="status-time">21:30</span>
-    <div class="status-icons">
-      <span>●●●</span><span>WiFi</span><span>⬛</span>
+<div class="screens-row">
+
+  <!-- ══════════ SCREEN 1: HOME ══════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label"><span class="screen-num">01</span>Главная</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="status-time">21:30</span>
+        <span class="status-icons">●●● WiFi ⬛</span>
+      </div>
+      <div class="scroll-area">
+        <div class="home-header">
+          <div class="home-greeting">Добро пожаловать</div>
+          <div class="home-title">Музей<br>Будущего</div>
+        </div>
+        <div class="hero-banner">
+          <div class="hero-bg"></div>
+          <div class="hero-grid"></div>
+          <div class="hero-ar-badge">★ AR 3D</div>
+          <div class="hero-content">
+            <div class="hero-tag">🔥 Сейчас популярно</div>
+            <div class="hero-name">Квантовый Разум</div>
+            <div class="hero-sub">Интерактивный ИИ-экспонат · Зал 3</div>
+          </div>
+        </div>
+        <div class="sec-head">
+          <span class="sec-title">Экспонаты</span>
+          <span class="sec-link">Все →</span>
+        </div>
+        <div class="h-scroll">
+          <div class="ex-card">
+            <div class="ex-img ex-bg1">🚀<div class="ex-ar">AR</div></div>
+            <div class="ex-info"><div class="ex-cat">Космос</div><div class="ex-name">Орбитальная станция 2077</div></div>
+          </div>
+          <div class="ex-card">
+            <div class="ex-img ex-bg2">🧬<div class="ex-ar">AR</div></div>
+            <div class="ex-info"><div class="ex-cat">Биотех</div><div class="ex-name">ДНК-редактор будущего</div></div>
+          </div>
+          <div class="ex-card">
+            <div class="ex-img ex-bg3">🌿</div>
+            <div class="ex-info"><div class="ex-cat">Экология</div><div class="ex-name">Живые города 2150</div></div>
+          </div>
+          <div class="ex-card">
+            <div class="ex-img ex-bg4">⚡</div>
+            <div class="ex-info"><div class="ex-cat">Энергия</div><div class="ex-name">Термоядерный реактор</div></div>
+          </div>
+        </div>
+        <div class="sec-head" style="margin-top:4px">
+          <span class="sec-title">Сегодня</span>
+          <span class="sec-link">Расписание →</span>
+        </div>
+        <div class="ev-card">
+          <div class="ev-time-block"><span class="ev-time">14:00</span><span class="ev-ampm">СЕЙЧАС</span></div>
+          <div class="ev-div"></div>
+          <div class="ev-body"><div class="ev-title">Лекция: ИИ и сознание</div><div class="ev-meta">Аудитория А1 · 60 мест</div></div>
+          <div class="ev-badge badge-live">LIVE</div>
+        </div>
+        <div class="ev-card">
+          <div class="ev-time-block"><span class="ev-time">16:30</span><span class="ev-ampm">СКОРО</span></div>
+          <div class="ev-div"></div>
+          <div class="ev-body"><div class="ev-title">AR-тур: Марс 2100</div><div class="ev-meta">Зал Космоса · 20 участников</div></div>
+          <div class="ev-badge badge-soon">СКОРО</div>
+        </div>
+        <div class="ev-card" style="margin-bottom:16px">
+          <div class="ev-time-block"><span class="ev-time">19:00</span><span class="ev-ampm">ВЕЧЕР</span></div>
+          <div class="ev-div"></div>
+          <div class="ev-body"><div class="ev-title">Нейрошоу: свет будущего</div><div class="ev-meta">Главный зал · 200 мест</div></div>
+          <div class="ev-badge" style="background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(124,58,237,0.3);font-size:8px;padding:3px 6px;border-radius:6px;font-weight:600;flex-shrink:0;letter-spacing:.05em;">18+</div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item active"><div class="nav-icon">⊞</div><div class="nav-label">Главная</div></div>
+        <div class="nav-item"><div class="nav-icon">◉</div><div class="nav-label">Карта</div></div>
+        <div class="nav-item"><div class="nav-icon">⬡</div><div class="nav-label">AR</div></div>
+        <div class="nav-item"><div class="nav-icon">◎</div><div class="nav-label">Профиль</div></div>
+      </div>
     </div>
   </div>
 
-  <div class="screen-content">
-    <div class="home-header">
-      <div class="home-greeting">Добро пожаловать</div>
-      <div class="home-title">Музей<br>Будущего</div>
-    </div>
-
-    <!-- HERO -->
-    <div class="hero-banner" onclick="showScreen('detail', document.querySelectorAll('.screen-label-btn')[1])">
-      <div class="hero-bg"></div>
-      <div class="hero-grid"></div>
-      <div class="hero-ar-badge">★ AR 3D</div>
-      <div class="hero-content">
-        <div class="hero-tag">🔥 Сейчас популярно</div>
-        <div class="hero-name">Квантовый Разум</div>
-        <div class="hero-sub">Интерактивный ИИ-экспонат · Зал 3</div>
-      </div>
-    </div>
-
-    <!-- EXHIBITS -->
-    <div class="section-header">
-      <span class="section-title">Экспонаты</span>
-      <span class="section-link">Все →</span>
-    </div>
-    <div class="h-scroll">
-      <div class="exhibit-card" onclick="showScreen('detail', document.querySelectorAll('.screen-label-btn')[1])">
-        <div class="exhibit-img ex1">
-          <div class="exhibit-icon">🚀</div>
-          <span class="exhibit-ar">AR</span>
+  <!-- ══════════ SCREEN 2: DETAIL ══════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label"><span class="screen-num">02</span>Экспонат</div>
+    <div class="phone">
+      <div class="scroll-area">
+        <div class="detail-hero">
+          <div class="detail-hero-bg"></div>
+          <div class="detail-icon">🚀</div>
+          <div class="detail-back">←</div>
         </div>
-        <div class="exhibit-info">
-          <div class="exhibit-cat">Космос</div>
-          <div class="exhibit-name">Орбитальная станция 2077</div>
+        <div class="detail-body">
+          <div class="detail-period">Космические технологии</div>
+          <div class="detail-title">Орбитальная станция 2077</div>
+          <div class="detail-sub">Масштабная 3D-модель МКС следующего поколения</div>
+          <div class="detail-stats">
+            <div class="dstat"><span class="dstat-val">3D</span><span class="dstat-label">Модель</span></div>
+            <div class="dstat"><span class="dstat-val">AR</span><span class="dstat-label">Режим</span></div>
+            <div class="dstat"><span class="dstat-val">4к</span><span class="dstat-label">Текстуры</span></div>
+            <div class="dstat"><span class="dstat-val">∞</span><span class="dstat-label">Касания</span></div>
+          </div>
+          <div class="detail-desc">Орбитальная станция нового поколения — совместный проект 47 стран. В AR-режиме вы можете исследовать все модули изнутри, запускать симуляции стыковки и наблюдать за жизнью экипажа в невесомости.</div>
+          <div class="detail-tags">
+            <span class="dtag dtag-blue">Космос</span>
+            <span class="dtag dtag-purple">Интерактив</span>
+            <span class="dtag dtag-amber">Для всех</span>
+            <span class="dtag dtag-blue">AR-опыт</span>
+          </div>
+          <button class="btn-primary">⬡ Запустить AR-опыт</button>
+          <button class="btn-secondary">◉ Найти на карте</button>
         </div>
       </div>
-      <div class="exhibit-card" onclick="showScreen('detail', document.querySelectorAll('.screen-label-btn')[1])">
-        <div class="exhibit-img ex2">
-          <div class="exhibit-icon">🧬</div>
-          <span class="exhibit-ar">AR</span>
-        </div>
-        <div class="exhibit-info">
-          <div class="exhibit-cat">Биотех</div>
-          <div class="exhibit-name">ДНК-редактор будущего</div>
-        </div>
-      </div>
-      <div class="exhibit-card">
-        <div class="exhibit-img ex3">
-          <div class="exhibit-icon">🌿</div>
-        </div>
-        <div class="exhibit-info">
-          <div class="exhibit-cat">Экология</div>
-          <div class="exhibit-name">Живые города 2150</div>
-        </div>
-      </div>
-      <div class="exhibit-card">
-        <div class="exhibit-img ex4">
-          <div class="exhibit-icon">⚡</div>
-        </div>
-        <div class="exhibit-info">
-          <div class="exhibit-cat">Энергия</div>
-          <div class="exhibit-name">Термоядерный реактор</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TODAY EVENTS -->
-    <div class="section-header" style="margin-top:8px">
-      <span class="section-title">Сегодня</span>
-      <span class="section-link">Расписание →</span>
-    </div>
-
-    <div class="event-card">
-      <div class="event-time-block">
-        <span class="event-time">14:00</span>
-        <span class="event-ampm">СЕЙЧАС</span>
-      </div>
-      <div class="event-divider"></div>
-      <div class="event-body">
-        <div class="event-title">Лекция: ИИ и сознание</div>
-        <div class="event-meta">Аудитория А1 · 60 мест</div>
-      </div>
-      <div class="event-badge badge-live">LIVE</div>
-    </div>
-
-    <div class="event-card">
-      <div class="event-time-block">
-        <span class="event-time">16:30</span>
-        <span class="event-ampm">СКОРО</span>
-      </div>
-      <div class="event-divider"></div>
-      <div class="event-body">
-        <div class="event-title">AR-тур: Марс 2100</div>
-        <div class="event-meta">Зал Космоса · 20 участников</div>
-      </div>
-      <div class="event-badge badge-soon">СКОРО</div>
-    </div>
-
-    <div class="event-card" style="margin-bottom:24px">
-      <div class="event-time-block">
-        <span class="event-time">19:00</span>
-        <span class="event-ampm">ВЕЧЕР</span>
-      </div>
-      <div class="event-divider"></div>
-      <div class="event-body">
-        <div class="event-title">Нейрошоу: свет будущего</div>
-        <div class="event-meta">Главный зал · 200 мест</div>
-      </div>
-      <div class="event-badge" style="background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(124,58,237,0.3)">18+</div>
     </div>
   </div>
 
-  <div class="bottom-nav">
-    <div class="nav-item active">
-      <div class="nav-icon">⊞</div>
-      <div class="nav-label">Главная</div>
-    </div>
-    <div class="nav-item" onclick="showScreen('map', document.querySelectorAll('.screen-label-btn')[2])">
-      <div class="nav-icon">◉</div>
-      <div class="nav-label">Карта</div>
-    </div>
-    <div class="nav-item" onclick="showScreen('ar', document.querySelectorAll('.screen-label-btn')[3])">
-      <div class="nav-icon">⬡</div>
-      <div class="nav-label">AR</div>
-    </div>
-    <div class="nav-item" onclick="showScreen('profile', document.querySelectorAll('.screen-label-btn')[4])">
-      <div class="nav-icon">◎</div>
-      <div class="nav-label">Профиль</div>
+  <!-- ══════════ SCREEN 3: MAP ══════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label"><span class="screen-num">03</span>Карта</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="status-time">21:30</span>
+        <span class="status-icons">●●● WiFi ⬛</span>
+      </div>
+      <div class="scroll-area">
+        <div class="map-top">
+          <div class="map-bar-title">Карта<br>музея</div>
+          <div class="floor-tabs">
+            <div class="ftab active">1F</div>
+            <div class="ftab">2F</div>
+            <div class="ftab">3F</div>
+          </div>
+        </div>
+        <div class="map-container">
+          <div class="map-grid"></div>
+          <div class="mroom mr-cosmos sel"><span class="mroom-icon">🚀</span><span class="mroom-name">Зал Космоса</span></div>
+          <div class="mroom mr-bio"><span class="mroom-icon">🧬</span><span class="mroom-name">Зал Биотеха</span></div>
+          <div class="mroom mr-ai"><span class="mroom-icon">🤖</span><span class="mroom-name">Зал ИИ</span></div>
+          <div class="mroom mr-time"><span class="mroom-icon">⏳</span><span class="mroom-name">Зал Времени</span></div>
+          <div class="mroom mr-enter"><span class="mroom-icon">🚪</span><span class="mroom-name">Вход</span></div>
+          <div class="you-dot"></div>
+        </div>
+        <div class="sec-head">
+          <span class="sec-title">Залы</span>
+          <span class="sec-link">Маршрут →</span>
+        </div>
+        <div class="room-row">
+          <div class="rrow-icon" style="background:rgba(0,100,200,0.2)">🚀</div>
+          <div class="rrow-info"><div class="rrow-name">Зал Космоса</div><div class="rrow-meta">12 экспонатов · AR · 1 этаж</div></div>
+          <div class="rrow-arrow">›</div>
+        </div>
+        <div class="room-row">
+          <div class="rrow-icon" style="background:rgba(0,150,80,0.2)">🧬</div>
+          <div class="rrow-info"><div class="rrow-name">Зал Биотеха</div><div class="rrow-meta">8 экспонатов · AR · 1 этаж</div></div>
+          <div class="rrow-arrow">›</div>
+        </div>
+        <div class="room-row">
+          <div class="rrow-icon" style="background:rgba(124,58,237,0.2)">🤖</div>
+          <div class="rrow-info"><div class="rrow-name">Зал Искусственного Интеллекта</div><div class="rrow-meta">15 экспонатов · Интерактив</div></div>
+          <div class="rrow-arrow">›</div>
+        </div>
+        <div class="room-row" style="margin-bottom:16px">
+          <div class="rrow-icon" style="background:rgba(245,158,11,0.2)">⏳</div>
+          <div class="rrow-info"><div class="rrow-name">Зал Машины Времени</div><div class="rrow-meta">6 экспонатов · VR · 1 этаж</div></div>
+          <div class="rrow-arrow">›</div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><div class="nav-icon">⊞</div><div class="nav-label">Главная</div></div>
+        <div class="nav-item active"><div class="nav-icon">◉</div><div class="nav-label">Карта</div></div>
+        <div class="nav-item"><div class="nav-icon">⬡</div><div class="nav-label">AR</div></div>
+        <div class="nav-item"><div class="nav-icon">◎</div><div class="nav-label">Профиль</div></div>
+      </div>
     </div>
   </div>
+
+  <!-- ══════════ SCREEN 4: AR ══════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label"><span class="screen-num">04</span>AR-режим</div>
+    <div class="phone">
+      <div class="ar-viewfinder">
+        <div class="ar-scan-line"></div>
+        <div class="ar-corner tl"></div>
+        <div class="ar-corner tr"></div>
+        <div class="ar-corner bl"></div>
+        <div class="ar-corner br"></div>
+        <div class="ar-object">🚀</div>
+        <div class="ar-label-card">
+          <div class="ar-label-title">СОЮЗ-МК</div>
+          <div class="ar-label-text">Главный жилой модуль · 2041 · Объём 340 м³</div>
+        </div>
+        <div class="ar-top-bar">
+          <div class="ar-back-btn">←</div>
+          <div class="ar-mode-tag"><div class="rec-dot"></div>AR LIVE</div>
+        </div>
+        <div class="ar-controls">
+          <div class="ar-ctrl">↻ Вращать</div>
+          <div class="ar-ctrl active">⊕ Инфо</div>
+          <div class="ar-ctrl">⤡ Масштаб</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ SCREEN 5: PROFILE ══════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label"><span class="screen-num">05</span>Профиль</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="status-time">21:30</span>
+        <span class="status-icons">●●● WiFi ⬛</span>
+      </div>
+      <div class="scroll-area">
+        <div class="profile-top">
+          <div class="avatar">👨‍🚀</div>
+          <div class="profile-name">Алексей Новиков</div>
+          <div class="profile-role">Исследователь · Platinum</div>
+        </div>
+        <div class="pstats">
+          <div class="ps"><span class="ps-val">24</span><span class="ps-label">Визита</span></div>
+          <div class="ps"><span class="ps-val">89</span><span class="ps-label">AR-опытов</span></div>
+          <div class="ps"><span class="ps-val">12</span><span class="ps-label">Билетов</span></div>
+        </div>
+        <div class="sec-head">
+          <span class="sec-title">Мои билеты</span>
+          <span class="sec-link">Все →</span>
+        </div>
+        <div class="ticket">
+          <div class="ticket-top">
+            <div><div class="ticket-event">Нейрошоу 2077</div><div class="ticket-type">VIP · Ряд A · Место 12</div></div>
+            <div class="ticket-qr">▦</div>
+          </div>
+          <div class="ticket-bottom">
+            <span>📅 <span class="ticket-val">26 фев</span></span>
+            <span>🕐 <span class="ticket-val">19:00</span></span>
+            <span>📍 <span class="ticket-val">Гл. зал</span></span>
+          </div>
+        </div>
+        <div class="ticket" style="margin-bottom:14px">
+          <div class="ticket-top">
+            <div><div class="ticket-event">AR-тур: Марс 2100</div><div class="ticket-type">Стандарт · Группа 3</div></div>
+            <div class="ticket-qr">▦</div>
+          </div>
+          <div class="ticket-bottom">
+            <span>📅 <span class="ticket-val">27 фев</span></span>
+            <span>🕐 <span class="ticket-val">16:30</span></span>
+            <span>📍 <span class="ticket-val">Космос</span></span>
+          </div>
+        </div>
+        <div class="menu-lbl">Настройки</div>
+        <div class="mrow"><div class="mrow-icon">🔔</div><span class="mrow-text">Уведомления</span><span class="mrow-arrow">›</span></div>
+        <div class="mrow"><div class="mrow-icon">🌐</div><span class="mrow-text">Язык и регион</span><span class="mrow-arrow">›</span></div>
+        <div class="mrow"><div class="mrow-icon">♿</div><span class="mrow-text">Доступность</span><span class="mrow-arrow">›</span></div>
+        <div class="mrow" style="margin-bottom:16px"><div class="mrow-icon">🚪</div><span class="mrow-text" style="color:#ef4444">Выйти из аккаунта</span><span class="mrow-arrow">›</span></div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><div class="nav-icon">⊞</div><div class="nav-label">Главная</div></div>
+        <div class="nav-item"><div class="nav-icon">◉</div><div class="nav-label">Карта</div></div>
+        <div class="nav-item"><div class="nav-icon">⬡</div><div class="nav-label">AR</div></div>
+        <div class="nav-item active"><div class="nav-icon">◎</div><div class="nav-label">Профиль</div></div>
+      </div>
+    </div>
+  </div>
+
 </div>
-
-<!-- ══════════════════════
-     SCREEN 2 — DETAIL
-══════════════════════ -->
-<div class="phone" id="phone-detail">
-  <div class="screen-content">
-    <div class="detail-hero">
-      <div class="detail-hero-bg"></div>
-      <div class="detail-hero-icon">🚀</div>
-      <div class="detail-back" onclick="showScreen('home', document.querySelectorAll('.screen-label-btn')[0])">←</div>
-      <div class="detail-ar-btn" onclick="showScreen('ar', document.querySelectorAll('.screen-label-btn')[3])">
-        ⬡ Запустить AR
-      </div>
-    </div>
-
-    <div class="detail-body">
-      <div class="detail-cat">Космические технологии</div>
-      <div class="detail-title">Орбитальная станция 2077</div>
-      <div class="detail-subtitle">Масштабная 3D-модель МКС следующего поколения</div>
-
-      <div class="detail-stats">
-        <div class="stat-item">
-          <span class="stat-value">3D</span>
-          <span class="stat-label">Модель</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">AR</span>
-          <span class="stat-label">Режим</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">4к</span>
-          <span class="stat-label">Текстуры</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">∞</span>
-          <span class="stat-label">Касания</span>
-        </div>
-      </div>
-
-      <div class="detail-desc">
-        Орбитальная станция нового поколения — совместный проект 47 стран. В AR-режиме вы можете исследовать все модули изнутри, запускать симуляции стыковки и наблюдать за жизнью экипажа в невесомости в режиме реального времени.
-      </div>
-
-      <div class="detail-tags">
-        <span class="tag tag-blue">Космос</span>
-        <span class="tag tag-purple">Интерактив</span>
-        <span class="tag tag-amber">Для всех</span>
-        <span class="tag tag-blue">AR-опыт</span>
-        <span class="tag tag-purple">Физика</span>
-      </div>
-
-      <button class="btn-primary" onclick="showScreen('ar', document.querySelectorAll('.screen-label-btn')[3])">
-        ⬡ Запустить AR-опыт
-      </button>
-      <button class="btn-secondary" onclick="showScreen('map', document.querySelectorAll('.screen-label-btn')[2])">
-        ◉ Найти на карте
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════
-     SCREEN 3 — MAP
-══════════════════════ -->
-<div class="phone" id="phone-map">
-  <div class="status-bar">
-    <span class="status-time">21:30</span>
-    <div class="status-icons"><span>●●●</span><span>WiFi</span><span>⬛</span></div>
-  </div>
-
-  <div class="screen-content">
-    <div class="map-header">
-      <div class="map-title">Карта<br>музея</div>
-      <div class="map-floor-picker">
-        <div class="floor-btn active">1F</div>
-        <div class="floor-btn">2F</div>
-        <div class="floor-btn">3F</div>
-      </div>
-    </div>
-
-    <div class="map-container">
-      <div class="map-grid"></div>
-      <!-- Rooms -->
-      <div class="map-room r-cosmos selected" onclick="selectRoom(this)">
-        <span class="room-icon">🚀</span>
-        <span class="room-name">Зал<br>Космоса</span>
-      </div>
-      <div class="map-room r-bio" onclick="selectRoom(this)">
-        <span class="room-icon">🧬</span>
-        <span class="room-name">Зал<br>Биотеха</span>
-      </div>
-      <div class="map-room r-ai" onclick="selectRoom(this)">
-        <span class="room-icon">🤖</span>
-        <span class="room-name">Зал<br>ИИ</span>
-      </div>
-      <div class="map-room r-time" onclick="selectRoom(this)">
-        <span class="room-icon">⏳</span>
-        <span class="room-name">Зал<br>Времени</span>
-      </div>
-      <div class="map-room r-enter" onclick="selectRoom(this)">
-        <span class="room-icon">🚪</span>
-        <span class="room-name">Вход</span>
-      </div>
-      <!-- YOU ARE HERE -->
-      <div class="you-dot" title="Вы здесь"></div>
-    </div>
-
-    <div class="section-header">
-      <span class="section-title">Залы</span>
-      <span class="section-link">Маршрут →</span>
-    </div>
-
-    <div class="room-list-item" onclick="showScreen('detail', document.querySelectorAll('.screen-label-btn')[1])">
-      <div class="room-list-icon" style="background:rgba(0,100,200,0.2)">🚀</div>
-      <div class="room-list-info">
-        <div class="room-list-name">Зал Космоса</div>
-        <div class="room-list-sub">12 экспонатов · AR-доступно · 1 этаж</div>
-      </div>
-      <div class="room-list-arrow">›</div>
-    </div>
-    <div class="room-list-item">
-      <div class="room-list-icon" style="background:rgba(0,150,80,0.2)">🧬</div>
-      <div class="room-list-info">
-        <div class="room-list-name">Зал Биотеха</div>
-        <div class="room-list-sub">8 экспонатов · AR-доступно · 1 этаж</div>
-      </div>
-      <div class="room-list-arrow">›</div>
-    </div>
-    <div class="room-list-item">
-      <div class="room-list-icon" style="background:rgba(124,58,237,0.2)">🤖</div>
-      <div class="room-list-info">
-        <div class="room-list-name">Зал Искусственного Интеллекта</div>
-        <div class="room-list-sub">15 экспонатов · Интерактив · 1 этаж</div>
-      </div>
-      <div class="room-list-arrow">›</div>
-    </div>
-    <div class="room-list-item" style="margin-bottom:20px">
-      <div class="room-list-icon" style="background:rgba(245,158,11,0.2)">⏳</div>
-      <div class="room-list-info">
-        <div class="room-list-name">Зал Машины Времени</div>
-        <div class="room-list-sub">6 экспонатов · VR · 1 этаж</div>
-      </div>
-      <div class="room-list-arrow">›</div>
-    </div>
-  </div>
-
-  <div class="bottom-nav">
-    <div class="nav-item" onclick="showScreen('home', document.querySelectorAll('.screen-label-btn')[0])">
-      <div class="nav-icon">⊞</div>
-      <div class="nav-label">Главная</div>
-    </div>
-    <div class="nav-item active">
-      <div class="nav-icon">◉</div>
-      <div class="nav-label">Карта</div>
-    </div>
-    <div class="nav-item" onclick="showScreen('ar', document.querySelectorAll('.screen-label-btn')[3])">
-      <div class="nav-icon">⬡</div>
-      <div class="nav-label">AR</div>
-    </div>
-    <div class="nav-item" onclick="showScreen('profile', document.querySelectorAll('.screen-label-btn')[4])">
-      <div class="nav-icon">◎</div>
-      <div class="nav-label">Профиль</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════
-     SCREEN 4 — AR
-══════════════════════ -->
-<div class="phone" id="phone-ar">
-  <div class="ar-screen" style="height:100%">
-    <div class="ar-viewfinder">
-      <div class="ar-scan-line"></div>
-      <!-- Corners -->
-      <div class="ar-corner tl"></div>
-      <div class="ar-corner tr"></div>
-      <div class="ar-corner bl"></div>
-      <div class="ar-corner br"></div>
-      <!-- Floating 3D object -->
-      <div class="ar-object">🚀</div>
-      <!-- Particles -->
-      <div class="ar-particles" id="particles"></div>
-      <!-- Info label -->
-      <div class="ar-label-card">
-        <div class="ar-label-title">СОЮЗ-МК</div>
-        <div class="ar-label-text">Главный жилой модуль · Год постройки 2041 · Объём 340 м³</div>
-      </div>
-      <!-- Top bar -->
-      <div class="ar-top-bar">
-        <div class="ar-back-btn" onclick="showScreen('detail', document.querySelectorAll('.screen-label-btn')[1])">←</div>
-        <div class="ar-mode-tag">
-          <div class="rec-dot"></div>
-          AR LIVE
-        </div>
-      </div>
-      <!-- Controls -->
-      <div class="ar-controls">
-        <div class="ar-ctrl-btn">↻ Вращать</div>
-        <div class="ar-ctrl-btn primary-ar">⊕ Информация</div>
-        <div class="ar-ctrl-btn">⤡ Масштаб</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════
-     SCREEN 5 — PROFILE
-══════════════════════ -->
-<div class="phone" id="phone-profile">
-  <div class="status-bar">
-    <span class="status-time">21:30</span>
-    <div class="status-icons"><span>●●●</span><span>WiFi</span><span>⬛</span></div>
-  </div>
-
-  <div class="screen-content">
-    <div class="profile-header">
-      <div class="avatar">👨‍🚀</div>
-      <div class="profile-name">Алексей Новиков</div>
-      <div class="profile-role">Исследователь · Platinum</div>
-    </div>
-
-    <div class="profile-stats">
-      <div class="pstat">
-        <span class="pstat-val">24</span>
-        <span class="pstat-label">Визита</span>
-      </div>
-      <div class="pstat">
-        <span class="pstat-val">89</span>
-        <span class="pstat-label">AR-опытов</span>
-      </div>
-      <div class="pstat">
-        <span class="pstat-val">12</span>
-        <span class="pstat-label">Билетов</span>
-      </div>
-    </div>
-
-    <!-- TICKET -->
-    <div class="section-header">
-      <span class="section-title">Мои билеты</span>
-      <span class="section-link">Все →</span>
-    </div>
-
-    <div class="ticket-card">
-      <div class="ticket-top">
-        <div>
-          <div class="ticket-event">Нейрошоу 2077</div>
-          <div class="ticket-type">VIP · Ряд A · Место 12</div>
-        </div>
-        <div class="ticket-qr">▦</div>
-      </div>
-      <div class="ticket-bottom">
-        <span>📅 <span class="ticket-val">26 фев 2026</span></span>
-        <span>🕐 <span class="ticket-val">19:00</span></span>
-        <span>📍 <span class="ticket-val">Гл. зал</span></span>
-      </div>
-    </div>
-
-    <div class="ticket-card" style="margin-bottom:24px">
-      <div class="ticket-top">
-        <div>
-          <div class="ticket-event">AR-тур: Марс 2100</div>
-          <div class="ticket-type">Стандарт · Группа 3</div>
-        </div>
-        <div class="ticket-qr">▦</div>
-      </div>
-      <div class="ticket-bottom">
-        <span>📅 <span class="ticket-val">27 фев 2026</span></span>
-        <span>🕐 <span class="ticket-val">16:30</span></span>
-        <span>📍 <span class="ticket-val">Зал Космос</span></span>
-      </div>
-    </div>
-
-    <!-- MENU -->
-    <div class="menu-section">
-      <div class="menu-label">Настройки</div>
-      <div class="menu-item">
-        <div class="menu-icon-wrap mi-blue">🔔</div>
-        <span class="menu-text">Уведомления</span>
-        <span class="menu-arrow">›</span>
-      </div>
-      <div class="menu-item">
-        <div class="menu-icon-wrap mi-purple">🌐</div>
-        <span class="menu-text">Язык и регион</span>
-        <span class="menu-arrow">›</span>
-      </div>
-      <div class="menu-item">
-        <div class="menu-icon-wrap mi-amber">♿</div>
-        <span class="menu-text">Доступность</span>
-        <span class="menu-arrow">›</span>
-      </div>
-      <div class="menu-item" style="margin-bottom:20px">
-        <div class="menu-icon-wrap mi-red">🚪</div>
-        <span class="menu-text" style="color:#ef4444">Выйти из аккаунта</span>
-        <span class="menu-arrow">›</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="bottom-nav">
-    <div class="nav-item" onclick="showScreen('home', document.querySelectorAll('.screen-label-btn')[0])">
-      <div class="nav-icon">⊞</div>
-      <div class="nav-label">Главная</div>
-    </div>
-    <div class="nav-item" onclick="showScreen('map', document.querySelectorAll('.screen-label-btn')[2])">
-      <div class="nav-icon">◉</div>
-      <div class="nav-label">Карта</div>
-    </div>
-    <div class="nav-item" onclick="showScreen('ar', document.querySelectorAll('.screen-label-btn')[3])">
-      <div class="nav-icon">⬡</div>
-      <div class="nav-label">AR</div>
-    </div>
-    <div class="nav-item active">
-      <div class="nav-icon">◎</div>
-      <div class="nav-label">Профиль</div>
-    </div>
-  </div>
-</div>
-
-<script>
-// Screens mapping
-const screens = {
-  home: 'phone-home',
-  detail: 'phone-detail',
-  map: 'phone-map',
-  ar: 'phone-ar',
-  profile: 'phone-profile'
-};
-
-function showScreen(id, labelEl) {
-  // Hide all phones
-  document.querySelectorAll('.phone').forEach(p => p.classList.remove('active'));
-  document.getElementById(screens[id]).classList.add('active');
-  // Update labels
-  document.querySelectorAll('.screen-label-btn').forEach(b => b.classList.remove('active'));
-  if (labelEl) labelEl.classList.add('active');
-}
-
-function selectRoom(el) {
-  document.querySelectorAll('.map-room').forEach(r => r.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-// AR Particles
-(function spawnParticles() {
-  const container = document.getElementById('particles');
-  if (!container) return;
-  setInterval(() => {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    const size = Math.random() * 4 + 2;
-    p.style.cssText = `
-      width:${size}px;height:${size}px;
-      left:${Math.random()*100}%;
-      bottom:${Math.random()*20}%;
-      animation-duration:${Math.random()*3+2}s;
-      animation-delay:${Math.random()*2}s;
-    `;
-    container.appendChild(p);
-    setTimeout(() => p.remove(), 5000);
-  }, 300);
-})();
-</script>
 </body>
 </html>
