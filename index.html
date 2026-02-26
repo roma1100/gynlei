@@ -2,1455 +2,1477 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXUS — Музей Будущего</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Музей Будущего</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #020408;
-    --surface: #060d18;
-    --surface2: #0a1628;
-    --cyan: #00e5ff;
-    --cyan-dim: #00e5ff44;
-    --gold: #ffd700;
-    --gold-dim: #ffd70033;
-    --magenta: #ff2d78;
-    --green: #00ff9d;
-    --text: #c8dce8;
-    --text-dim: #4a6478;
-    --border: #0d2035;
-    --glow-cyan: 0 0 20px #00e5ff66, 0 0 60px #00e5ff22;
-    --glow-gold: 0 0 20px #ffd70066, 0 0 60px #ffd70022;
-    --glow-magenta: 0 0 20px #ff2d7866;
+    --bg: #050810;
+    --surface: #0d1220;
+    --card: #111827;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --glow: 0 0 20px rgba(0,229,255,0.3);
   }
-
-  html { scroll-behavior: smooth; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
     background: var(--bg);
+    font-family: 'Syne', sans-serif;
     color: var(--text);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* PHONE FRAME */
+  .phone {
+    width: 390px;
+    height: 844px;
+    background: var(--bg);
+    border-radius: 50px;
+    border: 2px solid #1e293b;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 0 60px rgba(0,229,255,0.08), 0 40px 80px rgba(0,0,0,0.6);
+  }
+  .phone.active { display: flex; }
+
+  /* STATUS BAR */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 28px 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .status-time { font-family: 'Orbitron', monospace; font-size: 14px; }
+  .status-icons { display: flex; gap: 6px; align-items: center; }
+  .status-icons span { font-size: 11px; }
+
+  /* SCROLLABLE CONTENT */
+  .screen-content {
+    flex: 1;
+    overflow-y: auto;
     overflow-x: hidden;
-    cursor: none;
+    scrollbar-width: none;
+  }
+  .screen-content::-webkit-scrollbar { display: none; }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0 28px;
+    background: rgba(13,18,32,0.95);
+    border-top: 1px solid #1e293b;
+    backdrop-filter: blur(20px);
+    flex-shrink: 0;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 4px 12px;
+    border-radius: 12px;
+    transition: all 0.2s;
+  }
+  .nav-item.active .nav-icon { color: var(--accent); }
+  .nav-item.active .nav-label { color: var(--accent); }
+  .nav-icon { font-size: 22px; color: var(--muted); }
+  .nav-label { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; }
+
+  /* ───────────────────────────────
+     SCREEN 1 — HOME / EXPLORE
+  ─────────────────────────────── */
+  .home-header {
+    padding: 20px 24px 16px;
+  }
+  .home-greeting {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .home-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #00e5ff, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
   }
 
-  /* Custom cursor */
-  #cursor {
-    position: fixed; top: 0; left: 0; z-index: 9999;
-    pointer-events: none;
-    transition: transform 0.1s;
+  /* HERO BANNER */
+  .hero-banner {
+    margin: 0 24px 20px;
+    border-radius: 24px;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: linear-gradient(135deg, #0a1628 0%, #1a0a3c 50%, #0a1628 100%);
+    border: 1px solid rgba(0,229,255,0.2);
   }
-  #cursor-dot {
-    width: 8px; height: 8px; background: var(--cyan);
-    border-radius: 50%;
-    position: absolute; transform: translate(-50%, -50%);
-    box-shadow: var(--glow-cyan);
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 80% 50%, rgba(0,229,255,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 30%, rgba(124,58,237,0.2) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
   }
-  #cursor-ring {
-    width: 32px; height: 32px;
-    border: 1px solid var(--cyan-dim);
-    border-radius: 50%;
-    position: absolute; transform: translate(-50%, -50%);
-    transition: width 0.2s, height 0.2s, border-color 0.2s;
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
   }
-  body.hovering #cursor-ring {
-    width: 48px; height: 48px; border-color: var(--cyan);
+  .hero-content {
+    position: absolute;
+    inset: 0;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,229,255,0.15);
+    border: 1px solid rgba(0,229,255,0.3);
+    color: var(--accent);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    width: fit-content;
+  }
+  .hero-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .hero-sub { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .hero-ar-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(245,158,11,0.2);
+    border: 1px solid rgba(245,158,11,0.4);
+    color: var(--accent3);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
-  /* Noise overlay */
-  body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    opacity: 0.6; pointer-events: none;
+  /* SECTION TITLE */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .section-link {
+    font-size: 11px;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.05em;
   }
 
-  /* Scan line */
-  body::after {
-    content: '';
-    position: fixed; inset: 0; z-index: 1; pointer-events: none;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,229,255,0.015) 2px, rgba(0,229,255,0.015) 4px);
+  /* HORIZONTAL SCROLL CARDS */
+  .h-scroll {
+    display: flex;
+    gap: 14px;
+    padding: 0 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-bottom: 24px;
+  }
+  .h-scroll::-webkit-scrollbar { display: none; }
+
+  /* EXHIBIT CARD */
+  .exhibit-card {
+    width: 160px;
+    flex-shrink: 0;
+    background: var(--card);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid #1e293b;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .exhibit-card:active { transform: scale(0.97); }
+  .exhibit-img {
+    height: 110px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ex1 { background: linear-gradient(135deg, #0e2744, #1a3a5c); }
+  .ex2 { background: linear-gradient(135deg, #1a0a2e, #3b1f6e); }
+  .ex3 { background: linear-gradient(135deg, #0a2a1a, #1a5c3a); }
+  .ex4 { background: linear-gradient(135deg, #2a1a00, #5c3a00); }
+  .exhibit-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 40px;
+    opacity: 0.8;
+  }
+  .exhibit-ar {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0,229,255,0.2);
+    border: 1px solid rgba(0,229,255,0.4);
+    color: var(--accent);
+    font-size: 8px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.1em;
+  }
+  .exhibit-info { padding: 12px; }
+  .exhibit-cat {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .exhibit-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
   }
 
-  /* Grid bg */
-  .grid-bg {
-    position: fixed; inset: 0; z-index: 0;
+  /* TODAY EVENTS */
+  .event-card {
+    margin: 0 24px 12px;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid #1e293b;
+    transition: border-color 0.2s;
+  }
+  .event-card:active { border-color: var(--accent); }
+  .event-time-block {
+    width: 50px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+  .event-time {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .event-ampm { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; }
+  .event-divider { width: 1px; background: #1e293b; align-self: stretch; }
+  .event-body { flex: 1; }
+  .event-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .event-meta { font-size: 11px; color: var(--muted); }
+  .event-badge {
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .badge-live {
+    background: rgba(239,68,68,0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239,68,68,0.3);
+  }
+  .badge-soon {
+    background: rgba(245,158,11,0.15);
+    color: var(--accent3);
+    border: 1px solid rgba(245,158,11,0.3);
+  }
+
+  /* ───────────────────────────────
+     SCREEN 2 — EXHIBIT DETAIL
+  ─────────────────────────────── */
+  .detail-hero {
+    height: 280px;
+    background: linear-gradient(160deg, #0d1f3c, #1a0d3c, #0a1a2e);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .detail-hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 70% at 60% 40%, rgba(0,229,255,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 50% at 30% 70%, rgba(124,58,237,0.18) 0%, transparent 70%);
+  }
+  .detail-hero-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 90px;
+    opacity: 0.7;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translate(-50%,-50%) translateY(0)} 50%{transform:translate(-50%,-50%) translateY(-10px)} }
+  .detail-back {
+    position: absolute;
+    top: 56px;
+    left: 20px;
+    width: 36px;
+    height: 36px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+  }
+  .detail-ar-btn {
+    position: absolute;
+    top: 56px;
+    right: 20px;
+    background: rgba(0,229,255,0.15);
+    border: 1px solid rgba(0,229,255,0.4);
+    color: var(--accent);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(10px);
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+  }
+  .detail-body { padding: 24px; }
+  .detail-cat {
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .detail-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .detail-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .detail-stats {
+    display: flex;
+    gap: 0;
+    background: var(--card);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+    margin-bottom: 20px;
+  }
+  .stat-item {
+    flex: 1;
+    padding: 14px;
+    text-align: center;
+    border-right: 1px solid #1e293b;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .stat-label { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .detail-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(226,232,240,0.8);
+    margin-bottom: 20px;
+  }
+  .detail-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .tag {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+  .tag-blue { background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); color: var(--accent); }
+  .tag-purple { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); color: #a78bfa; }
+  .tag-amber { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: var(--accent3); }
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #00b4d8, #7c3aed);
+    border: none;
+    border-radius: 16px;
+    color: #fff;
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(0,229,255,0.2);
+  }
+  .btn-secondary {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* ───────────────────────────────
+     SCREEN 3 — MAP / NAVIGATION
+  ─────────────────────────────── */
+  .map-header {
+    padding: 56px 24px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .map-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 900;
+  }
+  .map-floor-picker {
+    display: flex;
+    gap: 6px;
+  }
+  .floor-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: 1px solid #1e293b;
+    background: var(--card);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', monospace;
+  }
+  .floor-btn.active {
+    background: rgba(0,229,255,0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .map-container {
+    margin: 0 24px 16px;
+    height: 340px;
+    background: var(--card);
+    border-radius: 24px;
+    border: 1px solid #1e293b;
+    position: relative;
+    overflow: hidden;
+  }
+  .map-grid {
+    position: absolute;
+    inset: 0;
     background-image:
       linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 80%);
+    background-size: 24px 24px;
   }
-
-  /* ===== NAV ===== */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    height: 64px;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 40px;
-    background: linear-gradient(180deg, rgba(2,4,8,0.95) 0%, transparent 100%);
-    border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(10px);
-  }
-  .nav-logo {
-    font-family: 'Orbitron', monospace;
-    font-weight: 900; font-size: 1.4rem;
-    color: var(--cyan);
-    text-shadow: var(--glow-cyan);
-    letter-spacing: 4px;
+  /* Rooms on map */
+  .map-room {
+    position: absolute;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    font-size: 10px;
+    text-align: center;
+    gap: 4px;
+    transition: all 0.2s;
+    padding: 6px;
   }
-  .nav-logo span { color: var(--gold); }
-  .nav-links {
-    display: flex; gap: 32px; list-style: none;
+  .map-room:hover, .map-room.selected { border-color: var(--accent); box-shadow: 0 0 12px rgba(0,229,255,0.2); }
+  .room-icon { font-size: 22px; }
+  .room-name { font-size: 8px; color: var(--muted); letter-spacing: 0.05em; line-height: 1.2; }
+  .r-cosmos { background: rgba(0,100,200,0.2); top: 20px; left: 20px; width: 100px; height: 80px; }
+  .r-bio    { background: rgba(0,150,80,0.2); top: 20px; left: 130px; width: 80px; height: 90px; }
+  .r-ai     { background: rgba(124,58,237,0.2); top: 20px; right: 20px; width: 80px; height: 80px; }
+  .r-time   { background: rgba(245,158,11,0.2); top: 120px; left: 20px; width: 90px; height: 80px; }
+  .r-enter  { background: rgba(0,229,255,0.1); bottom: 20px; left: 50%; transform: translateX(-50%); width: 100px; height: 50px; border-color: rgba(0,229,255,0.3); }
+  .you-dot {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 14px var(--accent);
+    top: 160px;
+    left: 150px;
+    animation: ping 2s ease-in-out infinite;
   }
-  .nav-links a {
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600; font-size: 0.85rem;
-    color: var(--text-dim);
-    text-decoration: none;
-    letter-spacing: 2px; text-transform: uppercase;
-    transition: color 0.3s;
-    position: relative;
-  }
-  .nav-links a::after {
-    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-    height: 1px; background: var(--cyan);
-    transform: scaleX(0); transition: transform 0.3s;
-  }
-  .nav-links a:hover { color: var(--cyan); }
-  .nav-links a:hover::after { transform: scaleX(1); }
-  .nav-status {
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'Space Mono', monospace; font-size: 0.7rem;
-    color: var(--green);
-  }
-  .status-dot {
-    width: 6px; height: 6px; background: var(--green);
-    border-radius: 50%; animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  @keyframes ping { 0%,100%{box-shadow:0 0 14px var(--accent)} 50%{box-shadow:0 0 24px var(--accent),0 0 40px rgba(0,229,255,0.3)} }
 
-  /* ===== HERO ===== */
-  #hero {
-    position: relative; min-height: 100vh;
-    display: flex; align-items: center; justify-content: center;
+  /* ROOM LIST */
+  .room-list-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .room-list-item:active { background: rgba(255,255,255,0.03); }
+  .room-list-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .room-list-info { flex: 1; }
+  .room-list-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .room-list-sub { font-size: 11px; color: var(--muted); }
+  .room-list-arrow { color: var(--muted); font-size: 16px; }
+
+  /* ───────────────────────────────
+     SCREEN 4 — AR VIEW (overlay)
+  ─────────────────────────────── */
+  .ar-screen {
+    position: relative;
+    height: 100%;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+  }
+  .ar-viewfinder {
+    flex: 1;
+    position: relative;
+    background:
+      linear-gradient(160deg, #060d1a 0%, #0a0520 50%, #060d1a 100%);
     overflow: hidden;
   }
-
-  .hero-orb {
+  .ar-scan-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scan 3s linear infinite;
+    box-shadow: 0 0 10px var(--accent);
+  }
+  @keyframes scan { 0%{top:-2px} 100%{top:100%} }
+  .ar-corner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-color: var(--accent);
+    border-style: solid;
+    opacity: 0.7;
+  }
+  .ar-corner.tl { top: 60px; left: 60px; border-width: 2px 0 0 2px; }
+  .ar-corner.tr { top: 60px; right: 60px; border-width: 2px 2px 0 0; }
+  .ar-corner.bl { bottom: 60px; left: 60px; border-width: 0 0 2px 2px; }
+  .ar-corner.br { bottom: 60px; right: 60px; border-width: 0 2px 2px 0; }
+  .ar-object {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 100px;
+    animation: ar-float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(0,229,255,0.5));
+  }
+  @keyframes ar-float { 0%,100%{transform:translate(-50%,-50%) rotateY(0)} 50%{transform:translate(-50%,-52%) rotateY(20deg)} }
+  .ar-label-card {
+    position: absolute;
+    top: 180px;
+    right: 20px;
+    background: rgba(13,18,32,0.85);
+    border: 1px solid rgba(0,229,255,0.3);
+    border-radius: 14px;
+    padding: 10px 14px;
+    backdrop-filter: blur(16px);
+    max-width: 140px;
+  }
+  .ar-label-title { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .ar-label-text { font-size: 10px; color: rgba(226,232,240,0.7); line-height: 1.4; }
+  .ar-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .particle {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
-    animation: float 8s ease-in-out infinite;
+    background: var(--accent);
+    opacity: 0.4;
+    animation: particle-anim linear infinite;
   }
-  .orb1 { width: 600px; height: 600px; background: radial-gradient(circle, #00e5ff18 0%, transparent 70%); top: -100px; left: -200px; }
-  .orb2 { width: 400px; height: 400px; background: radial-gradient(circle, #ff2d7812 0%, transparent 70%); bottom: 0; right: -100px; animation-delay: -4s; }
-  .orb3 { width: 300px; height: 300px; background: radial-gradient(circle, #ffd70010 0%, transparent 70%); top: 50%; left: 50%; animation-delay: -2s; }
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-30px)} }
-
-  .hero-content {
-    position: relative; z-index: 2; text-align: center;
-    max-width: 900px; padding: 20px;
+  @keyframes particle-anim {
+    0% { transform: translateY(0) scale(1); opacity: 0.4; }
+    100% { transform: translateY(-300px) scale(0); opacity: 0; }
   }
-
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--gold-dim); border: 1px solid var(--gold);
-    padding: 6px 18px; border-radius: 2px;
-    font-family: 'Space Mono', monospace; font-size: 0.7rem;
-    color: var(--gold); letter-spacing: 2px;
-    margin-bottom: 32px;
-    animation: fadeSlideDown 0.8s ease both;
-  }
-
-  .hero-title {
-    font-family: 'Orbitron', monospace;
-    font-weight: 900;
-    font-size: clamp(3rem, 8vw, 7rem);
-    line-height: 1; letter-spacing: -2px;
-    margin-bottom: 24px;
-    animation: fadeSlideDown 0.8s ease 0.1s both;
-  }
-  .hero-title .line1 { display: block; color: #fff; }
-  .hero-title .line2 {
-    display: block;
-    background: linear-gradient(135deg, var(--cyan), var(--magenta));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero-sub {
-    font-size: 1.15rem; color: var(--text-dim);
-    line-height: 1.7; margin-bottom: 48px;
-    font-weight: 300; letter-spacing: 1px;
-    animation: fadeSlideDown 0.8s ease 0.2s both;
-  }
-
-  .hero-cta {
-    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
-    animation: fadeSlideDown 0.8s ease 0.3s both;
-  }
-
-  @keyframes fadeSlideDown { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-
-  .btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 14px 32px; font-family: 'Rajdhani', sans-serif;
-    font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;
-    text-transform: uppercase; text-decoration: none;
-    border: none; cursor: pointer; transition: all 0.3s;
-    position: relative; overflow: hidden;
-  }
-  .btn-primary {
-    background: var(--cyan); color: var(--bg);
-    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  }
-  .btn-primary::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transform: translateX(-100%); transition: transform 0.5s;
-  }
-  .btn-primary:hover::before { transform: translateX(100%); }
-  .btn-primary:hover { box-shadow: var(--glow-cyan); }
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--text-dim); color: var(--text);
-    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  }
-  .btn-outline:hover { border-color: var(--cyan); color: var(--cyan); }
-
-  /* ===== STATS ===== */
-  .stats-bar {
-    position: relative; z-index: 2;
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    background: rgba(6,13,24,0.8); backdrop-filter: blur(10px);
-  }
-  .stat-item {
-    padding: 28px 32px;
-    border-right: 1px solid var(--border);
-    animation: fadeSlideDown 0.8s ease both;
-  }
-  .stat-item:last-child { border-right: none; }
-  .stat-num {
-    font-family: 'Orbitron', monospace; font-size: 2rem;
-    font-weight: 700; color: var(--cyan);
-    text-shadow: var(--glow-cyan); line-height: 1;
-  }
-  .stat-label { font-size: 0.8rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
-
-  /* ===== SECTION ===== */
-  section { position: relative; z-index: 2; }
-
-  .section-header {
-    display: flex; align-items: flex-end; justify-content: space-between;
-    margin-bottom: 48px; flex-wrap: wrap; gap: 16px;
-  }
-  .section-tag {
-    font-family: 'Space Mono', monospace; font-size: 0.65rem;
-    color: var(--cyan); letter-spacing: 3px; text-transform: uppercase;
-    margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
-  }
-  .section-tag::before { content: '//'; color: var(--text-dim); }
-  .section-title {
-    font-family: 'Orbitron', monospace; font-size: clamp(1.6rem, 4vw, 2.8rem);
-    font-weight: 700; color: #fff; line-height: 1.1;
-  }
-
-  .container { max-width: 1280px; margin: 0 auto; padding: 80px 40px; }
-
-  /* ===== MAP / FLOOR PLAN ===== */
-  #map-section { padding: 0; }
-  .map-wrapper {
-    display: grid; grid-template-columns: 1fr 380px;
-    min-height: 600px;
-  }
-
-  .floor-map {
-    position: relative; background: var(--surface);
-    border-right: 1px solid var(--border);
-    overflow: hidden;
-  }
-
-  .map-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(0,229,255,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,255,0.06) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
-  .map-svg-container {
-    position: relative; width: 100%; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    padding: 60px;
-  }
-
-  .map-zone {
+  .ar-controls {
     position: absolute;
-    border: 1px solid;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 6px;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 0 24px;
+  }
+  .ar-ctrl-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(0,229,255,0.3);
+    background: rgba(13,18,32,0.8);
+    color: var(--text);
+    font-size: 12px;
     cursor: pointer;
-    transition: all 0.3s;
-    background: rgba(6,13,24,0.7);
-    text-align: center; padding: 12px;
+    text-align: center;
+    backdrop-filter: blur(10px);
   }
-  .map-zone:hover, .map-zone.active {
-    z-index: 10;
-    transform: scale(1.03);
+  .ar-ctrl-btn.primary-ar {
+    background: rgba(0,229,255,0.2);
+    color: var(--accent);
+    font-weight: 600;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
   }
-  .map-zone .zone-icon { font-size: 1.5rem; }
-  .map-zone .zone-name {
-    font-family: 'Rajdhani', sans-serif; font-weight: 600;
-    font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase;
+  .ar-top-bar {
+    position: absolute;
+    top: 56px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
   }
-  .map-zone .zone-num {
-    font-family: 'Space Mono', monospace; font-size: 0.6rem;
-    opacity: 0.6;
+  .ar-back-btn {
+    width: 36px;
+    height: 36px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
   }
+  .ar-mode-tag {
+    background: rgba(239,68,68,0.2);
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #ef4444;
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.1em;
+  }
+  .rec-dot { width: 6px; height: 6px; background: #ef4444; border-radius: 50%; animation: blink 1s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  .zone-ai { border-color: var(--cyan); color: var(--cyan); top: 10%; left: 8%; width: 22%; height: 30%; }
-  .zone-ai:hover, .zone-ai.active { box-shadow: inset 0 0 30px var(--cyan-dim), var(--glow-cyan); background: rgba(0,229,255,0.08); }
+  /* ───────────────────────────────
+     SCREEN 5 — PROFILE / TICKETS
+  ─────────────────────────────── */
+  .profile-header {
+    padding: 56px 24px 24px;
+    background: linear-gradient(180deg, rgba(0,229,255,0.06) 0%, transparent 100%);
+    text-align: center;
+  }
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00b4d8, #7c3aed);
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    border: 3px solid rgba(0,229,255,0.3);
+    box-shadow: 0 0 30px rgba(0,229,255,0.2);
+  }
+  .profile-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .profile-role { font-size: 12px; color: var(--muted); letter-spacing: 0.1em; }
+  .profile-stats {
+    display: flex;
+    gap: 0;
+    margin: 20px 24px;
+    background: var(--card);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+  }
+  .pstat {
+    flex: 1;
+    padding: 16px 8px;
+    text-align: center;
+    border-right: 1px solid #1e293b;
+  }
+  .pstat:last-child { border-right: none; }
+  .pstat-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .pstat-label { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
 
-  .zone-bio { border-color: var(--green); color: var(--green); top: 10%; left: 35%; width: 22%; height: 30%; }
-  .zone-bio:hover, .zone-bio.active { box-shadow: inset 0 0 30px rgba(0,255,157,0.1), 0 0 20px rgba(0,255,157,0.3); background: rgba(0,255,157,0.06); }
+  /* TICKET */
+  .ticket-card {
+    margin: 0 24px 16px;
+    background: var(--card);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+    cursor: pointer;
+  }
+  .ticket-top {
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(0,100,200,0.2), rgba(124,58,237,0.2));
+    border-bottom: 1px dashed #1e293b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ticket-event { font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700; }
+  .ticket-type { font-size: 10px; color: var(--accent); margin-top: 2px; letter-spacing: 0.1em; }
+  .ticket-qr {
+    width: 50px;
+    height: 50px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .ticket-bottom {
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .ticket-val { color: var(--text); font-weight: 600; }
 
-  .zone-space { border-color: var(--magenta); color: var(--magenta); top: 10%; left: 62%; width: 30%; height: 45%; }
-  .zone-space:hover, .zone-space.active { box-shadow: inset 0 0 30px rgba(255,45,120,0.1), var(--glow-magenta); background: rgba(255,45,120,0.06); }
+  /* MENU ITEMS */
+  .menu-section { margin-bottom: 8px; }
+  .menu-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 8px 24px 4px;
+  }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .menu-item:active { background: rgba(255,255,255,0.03); }
+  .menu-icon-wrap {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .mi-blue { background: rgba(0,229,255,0.1); }
+  .mi-purple { background: rgba(124,58,237,0.1); }
+  .mi-amber { background: rgba(245,158,11,0.1); }
+  .mi-red { background: rgba(239,68,68,0.1); }
+  .menu-text { flex: 1; font-size: 14px; }
+  .menu-arrow { color: var(--muted); font-size: 14px; }
 
-  .zone-time { border-color: var(--gold); color: var(--gold); top: 45%; left: 8%; width: 48%; height: 35%; }
-  .zone-time:hover, .zone-time.active { box-shadow: inset 0 0 30px var(--gold-dim), var(--glow-gold); background: rgba(255,215,0,0.05); }
-
-  .zone-quantum { border-color: #a855f7; color: #a855f7; top: 55%; left: 62%; width: 30%; height: 25%; }
-  .zone-quantum:hover, .zone-quantum.active { box-shadow: inset 0 0 30px rgba(168,85,247,0.1), 0 0 20px rgba(168,85,247,0.3); background: rgba(168,85,247,0.06); }
-
-  /* Connector lines */
-  .connector {
-    position: absolute; background: var(--text-dim);
-    pointer-events: none; opacity: 0.3;
+  /* SCREEN LABELS */
+  .screen-labels {
+    width: 160px;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0;
   }
-  .conn-h { height: 1px; }
-  .conn-v { width: 1px; }
-
-  /* You-are-here */
-  .you-here {
-    position: absolute; z-index: 5; pointer-events: none;
-    bottom: 35%; left: 30%;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .you-dot {
-    width: 12px; height: 12px; background: var(--cyan);
-    border-radius: 50%; box-shadow: var(--glow-cyan);
-    animation: pulse 1.5s infinite;
-  }
-  .you-label {
-    font-family: 'Space Mono', monospace; font-size: 0.6rem;
-    color: var(--cyan); white-space: nowrap;
-  }
-
-  /* Map panel */
-  .map-panel {
-    background: var(--surface); padding: 40px 32px;
-    display: flex; flex-direction: column; gap: 24px;
-  }
-  .panel-title {
-    font-family: 'Orbitron', monospace; font-size: 1.1rem;
-    color: #fff; letter-spacing: 2px;
-  }
-  .panel-subtitle { font-size: 0.8rem; color: var(--text-dim); letter-spacing: 1px; }
-
-  .zone-info { display: none; }
-  .zone-info.visible { display: block; animation: fadeSlideDown 0.4s ease; }
-
-  .zone-info-header {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
-  }
-  .zone-color-bar { width: 3px; height: 40px; border-radius: 2px; flex-shrink: 0; }
-  .zone-info-name {
-    font-family: 'Orbitron', monospace; font-size: 1rem;
-    font-weight: 700; color: #fff;
-  }
-  .zone-info-desc {
-    font-size: 0.9rem; color: var(--text); line-height: 1.6;
-    margin-bottom: 20px;
-  }
-
-  .exhibits-list { display: flex; flex-direction: column; gap: 8px; }
-  .exhibit-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 10px 14px;
-    background: var(--surface2); border: 1px solid var(--border);
-    cursor: pointer; transition: all 0.2s;
-    font-size: 0.85rem;
-  }
-  .exhibit-item:hover {
-    border-color: var(--cyan); color: var(--cyan);
-    transform: translateX(4px);
-  }
-  .exhibit-num {
-    font-family: 'Space Mono', monospace; font-size: 0.65rem;
-    color: var(--text-dim); min-width: 32px;
-  }
-  .exhibit-ar {
-    margin-left: auto;
-    font-family: 'Space Mono', monospace; font-size: 0.6rem;
-    background: var(--cyan-dim); color: var(--cyan);
-    padding: 2px 6px; border-radius: 2px;
-  }
-
-  .panel-hint {
-    margin-top: auto;
-    background: var(--surface2); border: 1px solid var(--border);
-    padding: 16px; font-size: 0.8rem; color: var(--text-dim);
-    line-height: 1.5;
-  }
-  .panel-hint strong { color: var(--cyan); }
-
-  /* Floor selector */
-  .floor-selector {
-    position: absolute; left: 20px; bottom: 20px; z-index: 5;
-    display: flex; flex-direction: column; gap: 4px;
-  }
-  .floor-btn {
-    width: 36px; height: 36px;
-    background: var(--surface2); border: 1px solid var(--border);
-    color: var(--text-dim); font-family: 'Space Mono', monospace;
-    font-size: 0.75rem; cursor: pointer; transition: all 0.2s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .floor-btn.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); }
-  .floor-btn:hover:not(.active) { border-color: var(--cyan); color: var(--cyan); }
-
-  /* ===== EXHIBITS ===== */
-  #exhibits { background: var(--bg); }
-
-  .exhibits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2px;
-  }
-
-  .exhibit-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    overflow: hidden; cursor: pointer;
-    transition: all 0.4s; position: relative;
-    group: true;
-  }
-  .exhibit-card::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, var(--card-color, var(--cyan)) 0%, transparent 50%);
-    opacity: 0; transition: opacity 0.4s;
-  }
-  .exhibit-card:hover { border-color: var(--card-color, var(--cyan)); transform: translateY(-4px); }
-  .exhibit-card:hover::before { opacity: 0.05; }
-
-  .card-visual {
-    height: 200px; position: relative; overflow: hidden;
-    background: var(--surface2);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .card-visual-inner {
-    font-size: 4rem; opacity: 0.8;
-    transition: transform 0.4s; position: relative; z-index: 1;
-  }
-  .exhibit-card:hover .card-visual-inner { transform: scale(1.1) rotate(5deg); }
-
-  .card-glow {
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at center, var(--card-color, var(--cyan)) 0%, transparent 70%);
-    opacity: 0.07; transition: opacity 0.4s;
-  }
-  .exhibit-card:hover .card-glow { opacity: 0.15; }
-
-  .card-ar-badge {
-    position: absolute; top: 12px; right: 12px;
-    background: rgba(0,0,0,0.8); border: 1px solid var(--card-color, var(--cyan));
-    color: var(--card-color, var(--cyan));
-    font-family: 'Space Mono', monospace; font-size: 0.6rem;
-    padding: 4px 8px; letter-spacing: 1px;
-    display: flex; align-items: center; gap: 4px;
-  }
-  .ar-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: pulse 1s infinite; }
-
-  .card-body { padding: 24px; }
-  .card-zone {
-    font-family: 'Space Mono', monospace; font-size: 0.65rem;
-    color: var(--card-color, var(--cyan)); letter-spacing: 2px;
-    text-transform: uppercase; margin-bottom: 8px;
-  }
-  .card-title {
-    font-family: 'Orbitron', monospace; font-size: 1rem;
-    font-weight: 700; color: #fff; margin-bottom: 10px; line-height: 1.2;
-  }
-  .card-desc {
-    font-size: 0.85rem; color: var(--text-dim);
-    line-height: 1.6; margin-bottom: 20px;
-  }
-  .card-footer {
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .card-id {
-    font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--text-dim);
-  }
-  .card-btn {
-    background: none; border: 1px solid currentColor;
-    color: var(--card-color, var(--cyan)); padding: 6px 14px;
-    font-family: 'Rajdhani', sans-serif; font-weight: 600;
-    font-size: 0.75rem; letter-spacing: 1px;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .card-btn:hover { background: var(--card-color, var(--cyan)); color: var(--bg); }
-
-  /* ===== AR MODAL ===== */
-  #ar-modal {
-    position: fixed; inset: 0; z-index: 500;
-    background: rgba(0,0,0,0.92); backdrop-filter: blur(20px);
-    display: none; align-items: center; justify-content: center;
-    padding: 20px;
-  }
-  #ar-modal.open { display: flex; animation: modalIn 0.4s ease; }
-  @keyframes modalIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
-
-  .modal-container {
-    max-width: 900px; width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    display: grid; grid-template-columns: 1fr 1fr;
-    position: relative; overflow: hidden;
-  }
-
-  .modal-close {
-    position: absolute; top: 16px; right: 16px; z-index: 10;
-    background: none; border: 1px solid var(--border);
-    color: var(--text); width: 36px; height: 36px;
-    cursor: pointer; font-size: 1.1rem;
-    display: flex; align-items: center; justify-content: center;
+  .screen-label-btn {
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 1px solid #1e293b;
+    background: var(--card);
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     transition: all 0.2s;
   }
-  .modal-close:hover { border-color: var(--magenta); color: var(--magenta); }
-
-  .modal-ar-view {
-    background: var(--surface2); position: relative;
-    min-height: 400px; display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
+  .screen-label-btn.active {
+    border-color: var(--accent);
+    background: rgba(0,229,255,0.08);
+    color: var(--accent);
   }
-
-  .ar-scene {
-    position: relative; width: 200px; height: 200px;
-    display: flex; align-items: center; justify-content: center;
+  .screen-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    width: 20px;
+    text-align: center;
   }
-  .ar-object {
-    font-size: 5rem; position: relative; z-index: 2;
-    animation: arFloat 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px var(--modal-color, var(--cyan)));
+  .legend-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    padding-top: 4px;
   }
-  @keyframes arFloat { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-15px) rotate(5deg)} }
-
-  .ar-ring {
-    position: absolute; border-radius: 50%;
-    border: 1px solid var(--modal-color, var(--cyan));
-    animation: arRing 3s linear infinite;
-  }
-  .ar-ring-1 { width: 140px; height: 140px; opacity: 0.5; }
-  .ar-ring-2 { width: 200px; height: 200px; opacity: 0.3; animation-duration: 4s; animation-direction: reverse; }
-  .ar-ring-3 { width: 260px; height: 260px; opacity: 0.15; animation-duration: 6s; }
-  @keyframes arRing { from{transform:rotate(0)} to{transform:rotate(360deg)} }
-
-  .ar-scanline {
-    position: absolute; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--modal-color, var(--cyan)), transparent);
-    animation: arScan 2s linear infinite; opacity: 0.6;
-  }
-  @keyframes arScan { from{top:0} to{top:100%} }
-
-  .ar-corner {
-    position: absolute; width: 20px; height: 20px;
-    border-color: var(--modal-color, var(--cyan)); border-style: solid;
-  }
-  .ar-corner-tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
-  .ar-corner-tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; }
-  .ar-corner-bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; }
-  .ar-corner-br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
-
-  .ar-hud {
-    position: absolute; bottom: 16px; left: 16px;
-    font-family: 'Space Mono', monospace; font-size: 0.55rem;
-    color: var(--modal-color, var(--cyan)); opacity: 0.8;
-    line-height: 1.6;
-  }
-
-  .modal-info { padding: 40px 36px; display: flex; flex-direction: column; gap: 20px; }
-  .modal-zone {
-    font-family: 'Space Mono', monospace; font-size: 0.65rem;
-    color: var(--modal-color, var(--cyan)); letter-spacing: 2px;
-  }
-  .modal-title {
-    font-family: 'Orbitron', monospace; font-size: 1.4rem;
-    font-weight: 700; color: #fff; line-height: 1.2;
-  }
-  .modal-desc {
-    font-size: 0.9rem; color: var(--text); line-height: 1.7;
-  }
-
-  .modal-data {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-  }
-  .data-point {
-    background: var(--surface2); padding: 12px;
-    border-left: 2px solid var(--modal-color, var(--cyan));
-  }
-  .data-label { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
-  .data-val { font-family: 'Orbitron', monospace; font-size: 0.9rem; color: #fff; margin-top: 2px; }
-
-  .modal-actions { display: flex; gap: 10px; margin-top: auto; }
-
-  /* ===== AR GUIDE section ===== */
-  #ar-guide { background: var(--surface); }
-
-  .ar-steps {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-  }
-  .ar-step {
-    padding: 40px 32px; background: var(--bg);
-    border: 1px solid var(--border); position: relative;
-  }
-  .step-num {
-    font-family: 'Orbitron', monospace; font-size: 4rem;
-    font-weight: 900; color: var(--surface2);
-    position: absolute; top: 20px; right: 20px; line-height: 1;
-    user-select: none;
-  }
-  .step-icon { font-size: 2rem; margin-bottom: 20px; }
-  .step-title {
-    font-family: 'Orbitron', monospace; font-size: 1rem;
-    color: #fff; margin-bottom: 12px; font-weight: 700;
-  }
-  .step-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
-  .step-tag {
-    display: inline-block; margin-top: 16px;
-    font-family: 'Space Mono', monospace; font-size: 0.6rem;
-    color: var(--cyan); background: var(--cyan-dim);
-    padding: 3px 8px; letter-spacing: 1px;
-  }
-
-  /* ===== USER STORIES ===== */
-  #stories { background: var(--bg); }
-
-  .stories-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr);
-    gap: 2px;
-  }
-  .story-card {
-    background: var(--surface); border: 1px solid var(--border);
-    padding: 36px 32px; position: relative; overflow: hidden;
-  }
-  .story-card::after {
-    content: ''; position: absolute;
-    right: -40px; bottom: -40px;
-    width: 120px; height: 120px;
-    background: var(--story-color, var(--cyan));
-    opacity: 0.05; border-radius: 50%;
-  }
-  .story-persona {
-    display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
-  }
-  .persona-avatar {
-    width: 48px; height: 48px;
-    background: var(--surface2);
-    border: 2px solid var(--story-color, var(--cyan));
-    border-radius: 50%; display: flex; align-items: center;
-    justify-content: center; font-size: 1.5rem; flex-shrink: 0;
-  }
-  .persona-name {
-    font-family: 'Orbitron', monospace; font-size: 0.85rem; color: #fff;
-  }
-  .persona-role { font-size: 0.75rem; color: var(--text-dim); }
-
-  .story-quote {
-    font-size: 0.95rem; color: var(--text); line-height: 1.7;
-    font-style: italic; margin-bottom: 24px;
-    padding-left: 16px;
-    border-left: 2px solid var(--story-color, var(--cyan));
-  }
-  .story-steps { display: flex; flex-direction: column; gap: 8px; }
-  .story-step-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 0.82rem; color: var(--text-dim);
-  }
-  .step-check {
-    color: var(--story-color, var(--cyan)); flex-shrink: 0;
-    font-family: 'Space Mono', monospace;
-  }
-
-  /* ===== FOOTER ===== */
-  footer {
-    position: relative; z-index: 2;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 40px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 20px;
-  }
-  .footer-logo {
-    font-family: 'Orbitron', monospace; font-weight: 900;
-    color: var(--cyan); text-shadow: var(--glow-cyan);
-    letter-spacing: 4px; font-size: 1.2rem;
-  }
-  .footer-info {
-    font-family: 'Space Mono', monospace; font-size: 0.65rem;
-    color: var(--text-dim); text-align: right; line-height: 1.8;
-  }
-
-  /* ===== Dividers ===== */
-  .section-divider {
-    height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent);
-    position: relative; z-index: 2;
-  }
-
-  /* ===== Responsive ===== */
-  @media (max-width: 900px) {
-    .map-wrapper { grid-template-columns: 1fr; }
-    .stories-grid { grid-template-columns: 1fr; }
-    .ar-steps { grid-template-columns: 1fr; }
-    .stats-bar { grid-template-columns: 1fr 1fr; }
-    .modal-container { grid-template-columns: 1fr; }
-    .modal-ar-view { min-height: 250px; }
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
-    .container { padding: 60px 20px; }
+  .prototype-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.3);
+    color: #a78bfa;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: auto;
   }
 </style>
 </head>
 <body>
 
-<div class="grid-bg"></div>
-
-<!-- Cursor -->
-<div id="cursor"><div id="cursor-dot"></div><div id="cursor-ring"></div></div>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo" onclick="scrollTo(0,0)">NEX<span>US</span></div>
-  <ul class="nav-links">
-    <li><a href="#map-section">Карта</a></li>
-    <li><a href="#exhibits">Экспонаты</a></li>
-    <li><a href="#ar-guide">AR-гид</a></li>
-    <li><a href="#stories">Истории</a></li>
-  </ul>
-  <div class="nav-status">
-    <div class="status-dot"></div>
-    AR-АКТИВЕН
+<!-- SCREEN SELECTOR -->
+<div class="screen-labels" id="legend">
+  <div class="legend-title">Экраны</div>
+  <div class="screen-label-btn active" onclick="showScreen('home', this)">
+    <span class="screen-num">01</span> Главная
   </div>
-</nav>
+  <div class="screen-label-btn" onclick="showScreen('detail', this)">
+    <span class="screen-num">02</span> Экспонат
+  </div>
+  <div class="screen-label-btn" onclick="showScreen('map', this)">
+    <span class="screen-num">03</span> Навигация
+  </div>
+  <div class="screen-label-btn" onclick="showScreen('ar', this)">
+    <span class="screen-num">04</span> AR-режим
+  </div>
+  <div class="screen-label-btn" onclick="showScreen('profile', this)">
+    <span class="screen-num">05</span> Профиль
+  </div>
+  <div class="prototype-tag">Figma Prototype</div>
+</div>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-orb orb1"></div>
-  <div class="hero-orb orb2"></div>
-  <div class="hero-orb orb3"></div>
-  <div class="hero-content">
-    <div class="hero-badge">🏛 NEXUS MUSEUM // ВЕРСИЯ 3.7 // 2047</div>
-    <h1 class="hero-title">
-      <span class="line1">МУЗЕЙ</span>
-      <span class="line2">БУДУЩЕГО</span>
-    </h1>
-    <p class="hero-sub">Иммерсивный опыт на стыке физического и цифрового миров.<br>Исследуйте экспонаты через дополненную реальность — прямо сейчас.</p>
-    <div class="hero-cta">
-      <button class="btn btn-primary" onclick="document.getElementById('map-section').scrollIntoView({behavior:'smooth'})">
-        ⬡ Открыть карту музея
-      </button>
-      <button class="btn btn-outline" onclick="document.getElementById('exhibits').scrollIntoView({behavior:'smooth'})">
-        Все экспонаты
-      </button>
+<!-- ══════════════════════
+     SCREEN 1 — HOME
+══════════════════════ -->
+<div class="phone active" id="phone-home">
+  <div class="status-bar">
+    <span class="status-time">21:30</span>
+    <div class="status-icons">
+      <span>●●●</span><span>WiFi</span><span>⬛</span>
     </div>
   </div>
-</section>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stat-item" style="animation-delay:0.1s">
-    <div class="stat-num" id="cnt1">0</div>
-    <div class="stat-label">Экспонатов</div>
+  <div class="screen-content">
+    <div class="home-header">
+      <div class="home-greeting">Добро пожаловать</div>
+      <div class="home-title">Музей<br>Будущего</div>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero-banner" onclick="showScreen('detail', document.querySelectorAll('.screen-label-btn')[1])">
+      <div class="hero-bg"></div>
+      <div class="hero-grid"></div>
+      <div class="hero-ar-badge">★ AR 3D</div>
+      <div class="hero-content">
+        <div class="hero-tag">🔥 Сейчас популярно</div>
+        <div class="hero-name">Квантовый Разум</div>
+        <div class="hero-sub">Интерактивный ИИ-экспонат · Зал 3</div>
+      </div>
+    </div>
+
+    <!-- EXHIBITS -->
+    <div class="section-header">
+      <span class="section-title">Экспонаты</span>
+      <span class="section-link">Все →</span>
+    </div>
+    <div class="h-scroll">
+      <div class="exhibit-card" onclick="showScreen('detail', document.querySelectorAll('.screen-label-btn')[1])">
+        <div class="exhibit-img ex1">
+          <div class="exhibit-icon">🚀</div>
+          <span class="exhibit-ar">AR</span>
+        </div>
+        <div class="exhibit-info">
+          <div class="exhibit-cat">Космос</div>
+          <div class="exhibit-name">Орбитальная станция 2077</div>
+        </div>
+      </div>
+      <div class="exhibit-card" onclick="showScreen('detail', document.querySelectorAll('.screen-label-btn')[1])">
+        <div class="exhibit-img ex2">
+          <div class="exhibit-icon">🧬</div>
+          <span class="exhibit-ar">AR</span>
+        </div>
+        <div class="exhibit-info">
+          <div class="exhibit-cat">Биотех</div>
+          <div class="exhibit-name">ДНК-редактор будущего</div>
+        </div>
+      </div>
+      <div class="exhibit-card">
+        <div class="exhibit-img ex3">
+          <div class="exhibit-icon">🌿</div>
+        </div>
+        <div class="exhibit-info">
+          <div class="exhibit-cat">Экология</div>
+          <div class="exhibit-name">Живые города 2150</div>
+        </div>
+      </div>
+      <div class="exhibit-card">
+        <div class="exhibit-img ex4">
+          <div class="exhibit-icon">⚡</div>
+        </div>
+        <div class="exhibit-info">
+          <div class="exhibit-cat">Энергия</div>
+          <div class="exhibit-name">Термоядерный реактор</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODAY EVENTS -->
+    <div class="section-header" style="margin-top:8px">
+      <span class="section-title">Сегодня</span>
+      <span class="section-link">Расписание →</span>
+    </div>
+
+    <div class="event-card">
+      <div class="event-time-block">
+        <span class="event-time">14:00</span>
+        <span class="event-ampm">СЕЙЧАС</span>
+      </div>
+      <div class="event-divider"></div>
+      <div class="event-body">
+        <div class="event-title">Лекция: ИИ и сознание</div>
+        <div class="event-meta">Аудитория А1 · 60 мест</div>
+      </div>
+      <div class="event-badge badge-live">LIVE</div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-time-block">
+        <span class="event-time">16:30</span>
+        <span class="event-ampm">СКОРО</span>
+      </div>
+      <div class="event-divider"></div>
+      <div class="event-body">
+        <div class="event-title">AR-тур: Марс 2100</div>
+        <div class="event-meta">Зал Космоса · 20 участников</div>
+      </div>
+      <div class="event-badge badge-soon">СКОРО</div>
+    </div>
+
+    <div class="event-card" style="margin-bottom:24px">
+      <div class="event-time-block">
+        <span class="event-time">19:00</span>
+        <span class="event-ampm">ВЕЧЕР</span>
+      </div>
+      <div class="event-divider"></div>
+      <div class="event-body">
+        <div class="event-title">Нейрошоу: свет будущего</div>
+        <div class="event-meta">Главный зал · 200 мест</div>
+      </div>
+      <div class="event-badge" style="background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(124,58,237,0.3)">18+</div>
+    </div>
   </div>
-  <div class="stat-item" style="animation-delay:0.2s">
-    <div class="stat-num" id="cnt2">0</div>
-    <div class="stat-label">AR-объектов</div>
-  </div>
-  <div class="stat-item" style="animation-delay:0.3s">
-    <div class="stat-num" id="cnt3">0</div>
-    <div class="stat-label">Зон музея</div>
-  </div>
-  <div class="stat-item" style="animation-delay:0.4s">
-    <div class="stat-num" id="cnt4">0</div>
-    <div class="stat-label">Посетителей</div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-icon">⊞</div>
+      <div class="nav-label">Главная</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('map', document.querySelectorAll('.screen-label-btn')[2])">
+      <div class="nav-icon">◉</div>
+      <div class="nav-label">Карта</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('ar', document.querySelectorAll('.screen-label-btn')[3])">
+      <div class="nav-icon">⬡</div>
+      <div class="nav-label">AR</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('profile', document.querySelectorAll('.screen-label-btn')[4])">
+      <div class="nav-icon">◎</div>
+      <div class="nav-label">Профиль</div>
+    </div>
   </div>
 </div>
 
-<div class="section-divider"></div>
+<!-- ══════════════════════
+     SCREEN 2 — DETAIL
+══════════════════════ -->
+<div class="phone" id="phone-detail">
+  <div class="screen-content">
+    <div class="detail-hero">
+      <div class="detail-hero-bg"></div>
+      <div class="detail-hero-icon">🚀</div>
+      <div class="detail-back" onclick="showScreen('home', document.querySelectorAll('.screen-label-btn')[0])">←</div>
+      <div class="detail-ar-btn" onclick="showScreen('ar', document.querySelectorAll('.screen-label-btn')[3])">
+        ⬡ Запустить AR
+      </div>
+    </div>
 
-<!-- MAP -->
-<section id="map-section">
-  <div class="map-wrapper">
-    <div class="floor-map">
+    <div class="detail-body">
+      <div class="detail-cat">Космические технологии</div>
+      <div class="detail-title">Орбитальная станция 2077</div>
+      <div class="detail-subtitle">Масштабная 3D-модель МКС следующего поколения</div>
+
+      <div class="detail-stats">
+        <div class="stat-item">
+          <span class="stat-value">3D</span>
+          <span class="stat-label">Модель</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">AR</span>
+          <span class="stat-label">Режим</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">4к</span>
+          <span class="stat-label">Текстуры</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">∞</span>
+          <span class="stat-label">Касания</span>
+        </div>
+      </div>
+
+      <div class="detail-desc">
+        Орбитальная станция нового поколения — совместный проект 47 стран. В AR-режиме вы можете исследовать все модули изнутри, запускать симуляции стыковки и наблюдать за жизнью экипажа в невесомости в режиме реального времени.
+      </div>
+
+      <div class="detail-tags">
+        <span class="tag tag-blue">Космос</span>
+        <span class="tag tag-purple">Интерактив</span>
+        <span class="tag tag-amber">Для всех</span>
+        <span class="tag tag-blue">AR-опыт</span>
+        <span class="tag tag-purple">Физика</span>
+      </div>
+
+      <button class="btn-primary" onclick="showScreen('ar', document.querySelectorAll('.screen-label-btn')[3])">
+        ⬡ Запустить AR-опыт
+      </button>
+      <button class="btn-secondary" onclick="showScreen('map', document.querySelectorAll('.screen-label-btn')[2])">
+        ◉ Найти на карте
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     SCREEN 3 — MAP
+══════════════════════ -->
+<div class="phone" id="phone-map">
+  <div class="status-bar">
+    <span class="status-time">21:30</span>
+    <div class="status-icons"><span>●●●</span><span>WiFi</span><span>⬛</span></div>
+  </div>
+
+  <div class="screen-content">
+    <div class="map-header">
+      <div class="map-title">Карта<br>музея</div>
+      <div class="map-floor-picker">
+        <div class="floor-btn active">1F</div>
+        <div class="floor-btn">2F</div>
+        <div class="floor-btn">3F</div>
+      </div>
+    </div>
+
+    <div class="map-container">
       <div class="map-grid"></div>
-
-      <!-- Zones -->
-      <div class="map-zone zone-ai" onclick="selectZone('ai')" id="zone-ai">
-        <div class="zone-icon">🤖</div>
-        <div class="zone-name">Зал ИИ</div>
-        <div class="zone-num">Z-01</div>
+      <!-- Rooms -->
+      <div class="map-room r-cosmos selected" onclick="selectRoom(this)">
+        <span class="room-icon">🚀</span>
+        <span class="room-name">Зал<br>Космоса</span>
       </div>
-      <div class="map-zone zone-bio" onclick="selectZone('bio')" id="zone-bio">
-        <div class="zone-icon">🧬</div>
-        <div class="zone-name">Биотех</div>
-        <div class="zone-num">Z-02</div>
+      <div class="map-room r-bio" onclick="selectRoom(this)">
+        <span class="room-icon">🧬</span>
+        <span class="room-name">Зал<br>Биотеха</span>
       </div>
-      <div class="map-zone zone-space" onclick="selectZone('space')" id="zone-space">
-        <div class="zone-icon">🚀</div>
-        <div class="zone-name">Космос</div>
-        <div class="zone-num">Z-03</div>
+      <div class="map-room r-ai" onclick="selectRoom(this)">
+        <span class="room-icon">🤖</span>
+        <span class="room-name">Зал<br>ИИ</span>
       </div>
-      <div class="map-zone zone-time" onclick="selectZone('time')" id="zone-time">
-        <div class="zone-icon">⏳</div>
-        <div class="zone-name">Время & Физика</div>
-        <div class="zone-num">Z-04</div>
+      <div class="map-room r-time" onclick="selectRoom(this)">
+        <span class="room-icon">⏳</span>
+        <span class="room-name">Зал<br>Времени</span>
       </div>
-      <div class="map-zone zone-quantum" onclick="selectZone('quantum')" id="zone-quantum">
-        <div class="zone-icon">⚛️</div>
-        <div class="zone-name">Квантум</div>
-        <div class="zone-num">Z-05</div>
+      <div class="map-room r-enter" onclick="selectRoom(this)">
+        <span class="room-icon">🚪</span>
+        <span class="room-name">Вход</span>
       </div>
-
-      <div class="you-here">
-        <div class="you-dot"></div>
-        <div class="you-label">ВЫ ЗДЕСЬ</div>
-      </div>
-
-      <!-- Floor selector -->
-      <div class="floor-selector">
-        <button class="floor-btn active">3</button>
-        <button class="floor-btn">2</button>
-        <button class="floor-btn">1</button>
-        <button class="floor-btn">-1</button>
-      </div>
+      <!-- YOU ARE HERE -->
+      <div class="you-dot" title="Вы здесь"></div>
     </div>
 
-    <!-- Panel -->
-    <div class="map-panel">
-      <div>
-        <div class="panel-title">Навигация</div>
-        <div class="panel-subtitle">Интерактивная карта // Этаж 3</div>
-      </div>
-
-      <div id="zone-default-info">
-        <p style="font-size:0.85rem;color:var(--text-dim);line-height:1.6;">
-          Выберите зону на карте, чтобы узнать о доступных экспонатах и запустить AR-навигацию до нужного зала.
-        </p>
-        <div class="panel-hint" style="margin-top:16px">
-          <strong>Подсказка:</strong> Нажмите на любую из 5 зон на карте. Зоны с синим свечением поддерживают AR-просмотр.
-        </div>
-      </div>
-
-      <div class="zone-info" id="info-ai">
-        <div class="zone-info-header">
-          <div class="zone-color-bar" style="background:var(--cyan)"></div>
-          <div>
-            <div class="zone-info-name">🤖 Зал Искусственного Интеллекта</div>
-            <div style="font-size:0.7rem;color:var(--cyan);font-family:'Space Mono',monospace">Z-01 // УРОВЕНЬ 3</div>
-          </div>
-        </div>
-        <div class="zone-info-desc">Погружение в мир нейронных сетей и машинного обучения. Интерактивные инсталляции позволяют увидеть, как ИИ «думает».</div>
-        <div class="exhibits-list">
-          <div class="exhibit-item" onclick="openModal('neural')">
-            <span class="exhibit-num">E-01</span>NeuralDream Инсталляция<span class="exhibit-ar">AR</span>
-          </div>
-          <div class="exhibit-item" onclick="openModal('robot')">
-            <span class="exhibit-num">E-02</span>Робот ARIA-7<span class="exhibit-ar">AR</span>
-          </div>
-          <div class="exhibit-item" onclick="openModal('gpt')">
-            <span class="exhibit-num">E-03</span>Диалог с GPT-∞
-          </div>
-        </div>
-      </div>
-
-      <div class="zone-info" id="info-bio">
-        <div class="zone-info-header">
-          <div class="zone-color-bar" style="background:var(--green)"></div>
-          <div>
-            <div class="zone-info-name">🧬 Зал Биотехнологий</div>
-            <div style="font-size:0.7rem;color:var(--green);font-family:'Space Mono',monospace">Z-02 // УРОВЕНЬ 3</div>
-          </div>
-        </div>
-        <div class="zone-info-desc">Будущее медицины и генетики. 3D-модели ДНК, нанороботы и органоиды под AR-микроскопом.</div>
-        <div class="exhibits-list">
-          <div class="exhibit-item" onclick="openModal('dna')">
-            <span class="exhibit-num">E-04</span>Двойная спираль XL<span class="exhibit-ar">AR</span>
-          </div>
-          <div class="exhibit-item" onclick="openModal('nano')">
-            <span class="exhibit-num">E-05</span>Нанороботы-целители<span class="exhibit-ar">AR</span>
-          </div>
-          <div class="exhibit-item">
-            <span class="exhibit-num">E-06</span>CRISPR-лаборатория
-          </div>
-        </div>
-      </div>
-
-      <div class="zone-info" id="info-space">
-        <div class="zone-info-header">
-          <div class="zone-color-bar" style="background:var(--magenta)"></div>
-          <div>
-            <div class="zone-info-name">🚀 Зал Космических Исследований</div>
-            <div style="font-size:0.7rem;color:var(--magenta);font-family:'Space Mono',monospace">Z-03 // УРОВЕНЬ 3</div>
-          </div>
-        </div>
-        <div class="zone-info-desc">Путешествие сквозь галактики без выхода из музея. Голографические модели планет, марсианские базы и звёздные карты.</div>
-        <div class="exhibits-list">
-          <div class="exhibit-item" onclick="openModal('mars')">
-            <span class="exhibit-num">E-07</span>База на Марсе 2041<span class="exhibit-ar">AR</span>
-          </div>
-          <div class="exhibit-item">
-            <span class="exhibit-num">E-08</span>Экзопланета Kepler-452b
-          </div>
-          <div class="exhibit-item">
-            <span class="exhibit-num">E-09</span>Чёрная дыра M87*
-          </div>
-        </div>
-      </div>
-
-      <div class="zone-info" id="info-time">
-        <div class="zone-info-header">
-          <div class="zone-color-bar" style="background:var(--gold)"></div>
-          <div>
-            <div class="zone-info-name">⏳ Зал Времени и Физики</div>
-            <div style="font-size:0.7rem;color:var(--gold);font-family:'Space Mono',monospace">Z-04 // УРОВЕНЬ 3</div>
-          </div>
-        </div>
-        <div class="zone-info-desc">Релятивность пространства-времени в формате иммерсивной AR-среды. Замедление времени и квантовая запутанность.</div>
-        <div class="exhibits-list">
-          <div class="exhibit-item" onclick="openModal('time')">
-            <span class="exhibit-num">E-10</span>Машина времени Эйнштейна<span class="exhibit-ar">AR</span>
-          </div>
-          <div class="exhibit-item">
-            <span class="exhibit-num">E-11</span>Диаграммы Фейнмана
-          </div>
-        </div>
-      </div>
-
-      <div class="zone-info" id="info-quantum">
-        <div class="zone-info-header">
-          <div class="zone-color-bar" style="background:#a855f7"></div>
-          <div>
-            <div class="zone-info-name">⚛️ Квантовый зал</div>
-            <div style="font-size:0.7rem;color:#a855f7;font-family:'Space Mono',monospace">Z-05 // УРОВЕНЬ 3</div>
-          </div>
-        </div>
-        <div class="zone-info-desc">Суперпозиция и запутанность квантовых частиц в визуальном AR-формате. Кот Шрёдингера в натуральную величину.</div>
-        <div class="exhibits-list">
-          <div class="exhibit-item" onclick="openModal('quantum')">
-            <span class="exhibit-num">E-12</span>Кот Шрёдингера<span class="exhibit-ar">AR</span>
-          </div>
-          <div class="exhibit-item">
-            <span class="exhibit-num">E-13</span>Квантовый компьютер IBM-Q
-          </div>
-        </div>
-      </div>
-
-      <div class="panel-hint">
-        <strong>AR-навигация:</strong> Направьте камеру на маркер у входа в зал, чтобы активировать голографического гида.
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- EXHIBITS -->
-<section id="exhibits">
-  <div class="container">
     <div class="section-header">
-      <div>
-        <div class="section-tag">Экспонаты</div>
-        <h2 class="section-title">Избранные<br>инсталляции</h2>
-      </div>
-      <p style="max-width:280px;font-size:0.85rem;color:var(--text-dim);line-height:1.6">
-        Нажмите на карточку, чтобы запустить AR-предпросмотр и узнать детали экспоната.
-      </p>
+      <span class="section-title">Залы</span>
+      <span class="section-link">Маршрут →</span>
     </div>
-    <div class="exhibits-grid">
 
-      <div class="exhibit-card" style="--card-color:var(--cyan)" onclick="openModal('neural')">
-        <div class="card-visual">
-          <div class="card-glow"></div>
-          <div class="card-visual-inner">🧠</div>
-          <div class="card-ar-badge"><div class="ar-dot"></div>AR</div>
-        </div>
-        <div class="card-body">
-          <div class="card-zone">Зал ИИ // E-01</div>
-          <div class="card-title">NeuralDream Инсталляция</div>
-          <div class="card-desc">Визуализация работы нейронной сети в реальном времени — 50 млрд синапсов в вашей руке.</div>
-          <div class="card-footer">
-            <div class="card-id">ID: ND-2047</div>
-            <button class="card-btn">Запустить AR</button>
-          </div>
-        </div>
+    <div class="room-list-item" onclick="showScreen('detail', document.querySelectorAll('.screen-label-btn')[1])">
+      <div class="room-list-icon" style="background:rgba(0,100,200,0.2)">🚀</div>
+      <div class="room-list-info">
+        <div class="room-list-name">Зал Космоса</div>
+        <div class="room-list-sub">12 экспонатов · AR-доступно · 1 этаж</div>
       </div>
-
-      <div class="exhibit-card" style="--card-color:var(--magenta)" onclick="openModal('mars')">
-        <div class="card-visual">
-          <div class="card-glow"></div>
-          <div class="card-visual-inner">🔴</div>
-          <div class="card-ar-badge"><div class="ar-dot"></div>AR</div>
-        </div>
-        <div class="card-body">
-          <div class="card-zone">Космос // E-07</div>
-          <div class="card-title">Марсианская База «Заря»</div>
-          <div class="card-desc">Полноразмерная AR-модель первой марсианской колонии 2041 года с экскурсией внутри.</div>
-          <div class="card-footer">
-            <div class="card-id">ID: MB-2041</div>
-            <button class="card-btn">Запустить AR</button>
-          </div>
-        </div>
+      <div class="room-list-arrow">›</div>
+    </div>
+    <div class="room-list-item">
+      <div class="room-list-icon" style="background:rgba(0,150,80,0.2)">🧬</div>
+      <div class="room-list-info">
+        <div class="room-list-name">Зал Биотеха</div>
+        <div class="room-list-sub">8 экспонатов · AR-доступно · 1 этаж</div>
       </div>
-
-      <div class="exhibit-card" style="--card-color:var(--green)" onclick="openModal('dna')">
-        <div class="card-visual">
-          <div class="card-glow"></div>
-          <div class="card-visual-inner">🧬</div>
-          <div class="card-ar-badge"><div class="ar-dot"></div>AR</div>
-        </div>
-        <div class="card-body">
-          <div class="card-zone">Биотех // E-04</div>
-          <div class="card-title">Двойная спираль XL</div>
-          <div class="card-desc">3-метровая интерактивная модель ДНК с возможностью «редактирования» генов через AR-интерфейс.</div>
-          <div class="card-footer">
-            <div class="card-id">ID: DS-2044</div>
-            <button class="card-btn">Запустить AR</button>
-          </div>
-        </div>
+      <div class="room-list-arrow">›</div>
+    </div>
+    <div class="room-list-item">
+      <div class="room-list-icon" style="background:rgba(124,58,237,0.2)">🤖</div>
+      <div class="room-list-info">
+        <div class="room-list-name">Зал Искусственного Интеллекта</div>
+        <div class="room-list-sub">15 экспонатов · Интерактив · 1 этаж</div>
       </div>
-
-      <div class="exhibit-card" style="--card-color:var(--gold)" onclick="openModal('time')">
-        <div class="card-visual">
-          <div class="card-glow"></div>
-          <div class="card-visual-inner">⏳</div>
-          <div class="card-ar-badge"><div class="ar-dot"></div>AR</div>
-        </div>
-        <div class="card-body">
-          <div class="card-zone">Время & Физика // E-10</div>
-          <div class="card-title">Машина времени Эйнштейна</div>
-          <div class="card-desc">Ощутите замедление времени при скорости, близкой к световой — через кинетическую AR-симуляцию.</div>
-          <div class="card-footer">
-            <div class="card-id">ID: MT-1905</div>
-            <button class="card-btn">Запустить AR</button>
-          </div>
-        </div>
+      <div class="room-list-arrow">›</div>
+    </div>
+    <div class="room-list-item" style="margin-bottom:20px">
+      <div class="room-list-icon" style="background:rgba(245,158,11,0.2)">⏳</div>
+      <div class="room-list-info">
+        <div class="room-list-name">Зал Машины Времени</div>
+        <div class="room-list-sub">6 экспонатов · VR · 1 этаж</div>
       </div>
-
-      <div class="exhibit-card" style="--card-color:#a855f7" onclick="openModal('quantum')">
-        <div class="card-visual">
-          <div class="card-glow"></div>
-          <div class="card-visual-inner">🐈</div>
-          <div class="card-ar-badge"><div class="ar-dot"></div>AR</div>
-        </div>
-        <div class="card-body">
-          <div class="card-zone">Квантум // E-12</div>
-          <div class="card-title">Кот Шрёдингера</div>
-          <div class="card-desc">Суперпозиция в AR: наблюдатель влияет на исход — живой или мёртвый — только ваш взгляд решает.</div>
-          <div class="card-footer">
-            <div class="card-id">ID: KS-1935</div>
-            <button class="card-btn">Запустить AR</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="exhibit-card" style="--card-color:var(--green)" onclick="openModal('nano')">
-        <div class="card-visual">
-          <div class="card-glow"></div>
-          <div class="card-visual-inner">🔬</div>
-          <div class="card-ar-badge"><div class="ar-dot"></div>AR</div>
-        </div>
-        <div class="card-body">
-          <div class="card-zone">Биотех // E-05</div>
-          <div class="card-title">Нанороботы-целители</div>
-          <div class="card-desc">Увеличенные в миллион раз AR-модели нанороботов, уничтожающих раковые клетки внутри тела.</div>
-          <div class="card-footer">
-            <div class="card-id">ID: NR-2039</div>
-            <button class="card-btn">Запустить AR</button>
-          </div>
-        </div>
-      </div>
-
+      <div class="room-list-arrow">›</div>
     </div>
   </div>
-</section>
 
-<div class="section-divider"></div>
+  <div class="bottom-nav">
+    <div class="nav-item" onclick="showScreen('home', document.querySelectorAll('.screen-label-btn')[0])">
+      <div class="nav-icon">⊞</div>
+      <div class="nav-label">Главная</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon">◉</div>
+      <div class="nav-label">Карта</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('ar', document.querySelectorAll('.screen-label-btn')[3])">
+      <div class="nav-icon">⬡</div>
+      <div class="nav-label">AR</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('profile', document.querySelectorAll('.screen-label-btn')[4])">
+      <div class="nav-icon">◎</div>
+      <div class="nav-label">Профиль</div>
+    </div>
+  </div>
+</div>
 
-<!-- AR GUIDE -->
-<section id="ar-guide">
-  <div class="container">
+<!-- ══════════════════════
+     SCREEN 4 — AR
+══════════════════════ -->
+<div class="phone" id="phone-ar">
+  <div class="ar-screen" style="height:100%">
+    <div class="ar-viewfinder">
+      <div class="ar-scan-line"></div>
+      <!-- Corners -->
+      <div class="ar-corner tl"></div>
+      <div class="ar-corner tr"></div>
+      <div class="ar-corner bl"></div>
+      <div class="ar-corner br"></div>
+      <!-- Floating 3D object -->
+      <div class="ar-object">🚀</div>
+      <!-- Particles -->
+      <div class="ar-particles" id="particles"></div>
+      <!-- Info label -->
+      <div class="ar-label-card">
+        <div class="ar-label-title">СОЮЗ-МК</div>
+        <div class="ar-label-text">Главный жилой модуль · Год постройки 2041 · Объём 340 м³</div>
+      </div>
+      <!-- Top bar -->
+      <div class="ar-top-bar">
+        <div class="ar-back-btn" onclick="showScreen('detail', document.querySelectorAll('.screen-label-btn')[1])">←</div>
+        <div class="ar-mode-tag">
+          <div class="rec-dot"></div>
+          AR LIVE
+        </div>
+      </div>
+      <!-- Controls -->
+      <div class="ar-controls">
+        <div class="ar-ctrl-btn">↻ Вращать</div>
+        <div class="ar-ctrl-btn primary-ar">⊕ Информация</div>
+        <div class="ar-ctrl-btn">⤡ Масштаб</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     SCREEN 5 — PROFILE
+══════════════════════ -->
+<div class="phone" id="phone-profile">
+  <div class="status-bar">
+    <span class="status-time">21:30</span>
+    <div class="status-icons"><span>●●●</span><span>WiFi</span><span>⬛</span></div>
+  </div>
+
+  <div class="screen-content">
+    <div class="profile-header">
+      <div class="avatar">👨‍🚀</div>
+      <div class="profile-name">Алексей Новиков</div>
+      <div class="profile-role">Исследователь · Platinum</div>
+    </div>
+
+    <div class="profile-stats">
+      <div class="pstat">
+        <span class="pstat-val">24</span>
+        <span class="pstat-label">Визита</span>
+      </div>
+      <div class="pstat">
+        <span class="pstat-val">89</span>
+        <span class="pstat-label">AR-опытов</span>
+      </div>
+      <div class="pstat">
+        <span class="pstat-val">12</span>
+        <span class="pstat-label">Билетов</span>
+      </div>
+    </div>
+
+    <!-- TICKET -->
     <div class="section-header">
-      <div>
-        <div class="section-tag">Как пользоваться</div>
-        <h2 class="section-title">AR-навигация<br>за 3 шага</h2>
+      <span class="section-title">Мои билеты</span>
+      <span class="section-link">Все →</span>
+    </div>
+
+    <div class="ticket-card">
+      <div class="ticket-top">
+        <div>
+          <div class="ticket-event">Нейрошоу 2077</div>
+          <div class="ticket-type">VIP · Ряд A · Место 12</div>
+        </div>
+        <div class="ticket-qr">▦</div>
+      </div>
+      <div class="ticket-bottom">
+        <span>📅 <span class="ticket-val">26 фев 2026</span></span>
+        <span>🕐 <span class="ticket-val">19:00</span></span>
+        <span>📍 <span class="ticket-val">Гл. зал</span></span>
       </div>
     </div>
-    <div class="ar-steps">
-      <div class="ar-step">
-        <div class="step-num">01</div>
-        <div class="step-icon">📱</div>
-        <div class="step-title">Откройте приложение</div>
-        <div class="step-desc">Запустите NEXUS-AR на своём устройстве или отсканируйте QR-код у входа в любой зал. Приложение доступно для iOS и Android.</div>
-        <span class="step-tag">NEXUS APP 3.7</span>
+
+    <div class="ticket-card" style="margin-bottom:24px">
+      <div class="ticket-top">
+        <div>
+          <div class="ticket-event">AR-тур: Марс 2100</div>
+          <div class="ticket-type">Стандарт · Группа 3</div>
+        </div>
+        <div class="ticket-qr">▦</div>
       </div>
-      <div class="ar-step">
-        <div class="step-num">02</div>
-        <div class="step-icon">🎯</div>
-        <div class="step-title">Направьте на маркер</div>
-        <div class="step-desc">Наведите камеру на специальный AR-маркер рядом с экспонатом. Система автоматически распознает объект за 0.3 секунды.</div>
-        <span class="step-tag">РАСПОЗНАВАНИЕ 0.3с</span>
-      </div>
-      <div class="ar-step">
-        <div class="step-num">03</div>
-        <div class="step-icon">✨</div>
-        <div class="step-title">Исследуйте</div>
-        <div class="step-desc">Голографический слой накладывается поверх реального мира. Взаимодействуйте жестами, задавайте вопросы AI-гиду голосом.</div>
-        <span class="step-tag">ЖЕСТЫ + ГОЛОС</span>
+      <div class="ticket-bottom">
+        <span>📅 <span class="ticket-val">27 фев 2026</span></span>
+        <span>🕐 <span class="ticket-val">16:30</span></span>
+        <span>📍 <span class="ticket-val">Зал Космос</span></span>
       </div>
     </div>
-  </div>
-</section>
 
-<div class="section-divider"></div>
-
-<!-- USER STORIES -->
-<section id="stories">
-  <div class="container">
-    <div class="section-header">
-      <div>
-        <div class="section-tag">Пользовательские истории</div>
-        <h2 class="section-title">Кто и как<br>использует NEXUS</h2>
+    <!-- MENU -->
+    <div class="menu-section">
+      <div class="menu-label">Настройки</div>
+      <div class="menu-item">
+        <div class="menu-icon-wrap mi-blue">🔔</div>
+        <span class="menu-text">Уведомления</span>
+        <span class="menu-arrow">›</span>
       </div>
-    </div>
-    <div class="stories-grid">
-
-      <div class="story-card" style="--story-color:var(--cyan)">
-        <div class="story-persona">
-          <div class="persona-avatar">👩‍🔬</div>
-          <div>
-            <div class="persona-name">Мария, 28</div>
-            <div class="persona-role">Студентка биофака // Первый визит</div>
-          </div>
-        </div>
-        <div class="story-quote">«Я хотела понять, как работает редактирование генома, не читая скучные статьи. AR-модель ДНК в Биотех-зале объяснила всё за 10 минут.»</div>
-        <div class="story-steps">
-          <div class="story-step-item"><span class="step-check">✓</span>Отсканировала карту при входе</div>
-          <div class="story-step-item"><span class="step-check">✓</span>Нашла Зал Биотехнологий на карте</div>
-          <div class="story-step-item"><span class="step-check">✓</span>Активировала AR у экспоната «Двойная спираль»</div>
-          <div class="story-step-item"><span class="step-check">✓</span>Задала 3 вопроса AI-гиду голосом</div>
-        </div>
+      <div class="menu-item">
+        <div class="menu-icon-wrap mi-purple">🌐</div>
+        <span class="menu-text">Язык и регион</span>
+        <span class="menu-arrow">›</span>
       </div>
-
-      <div class="story-card" style="--story-color:var(--magenta)">
-        <div class="story-persona">
-          <div class="persona-avatar">👦</div>
-          <div>
-            <div class="persona-name">Тимур, 12</div>
-            <div class="persona-role">Школьник // Экскурсия класса</div>
-          </div>
-        </div>
-        <div class="story-quote">«Это как игра! Я нашёл скрытый AR-объект в Квантовом зале — там кот Шрёдингера появлялся, только если не смотреть прямо.»</div>
-        <div class="story-steps">
-          <div class="story-step-item"><span class="step-check">✓</span>Получил детский AR-гид у администратора</div>
-          <div class="story-step-item"><span class="step-check">✓</span>Собрал 7 из 10 квантовых «пасхалок»</div>
-          <div class="story-step-item"><span class="step-check">✓</span>Прошёл мини-квиз и получил значок</div>
-        </div>
+      <div class="menu-item">
+        <div class="menu-icon-wrap mi-amber">♿</div>
+        <span class="menu-text">Доступность</span>
+        <span class="menu-arrow">›</span>
       </div>
-
-      <div class="story-card" style="--story-color:var(--gold)">
-        <div class="story-persona">
-          <div class="persona-avatar">👨‍💼</div>
-          <div>
-            <div class="persona-name">Алексей, 45</div>
-            <div class="persona-role">Технический директор // Корпоратив</div>
-          </div>
-        </div>
-        <div class="story-quote">«Мы провели командный тимбилдинг в Зале ИИ. Разные команды соревновались в AR-викторине — это сплотило людей лучше любого тренинга.»</div>
-        <div class="story-steps">
-          <div class="story-step-item"><span class="step-check">✓</span>Забронировал зал для группы 30+ человек</div>
-          <div class="story-step-item"><span class="step-check">✓</span>Настроил командный AR-режим через веб-панель</div>
-          <div class="story-step-item"><span class="step-check">✓</span>Просмотрел аналитику активности команды</div>
-        </div>
+      <div class="menu-item" style="margin-bottom:20px">
+        <div class="menu-icon-wrap mi-red">🚪</div>
+        <span class="menu-text" style="color:#ef4444">Выйти из аккаунта</span>
+        <span class="menu-arrow">›</span>
       </div>
-
-      <div class="story-card" style="--story-color:#a855f7">
-        <div class="story-persona">
-          <div class="persona-avatar">👵</div>
-          <div>
-            <div class="persona-name">Нина, 72</div>
-            <div class="persona-role">Пенсионер // Медленная прогулка</div>
-          </div>
-        </div>
-        <div class="story-quote">«Я думала, что всё это очень сложно для меня. Но голосовой гид вёл меня шаг за шагом, и я увидела рождение звезды прямо в руке!»</div>
-        <div class="story-steps">
-          <div class="story-step-item"><span class="step-check">✓</span>Выбрала упрощённый режим навигации</div>
-          <div class="story-step-item"><span class="step-check">✓</span>Голосовой гид объяснял каждый шаг</div>
-          <div class="story-step-item"><span class="step-check">✓</span>Поделилась AR-снимком с внуками</div>
-        </div>
-      </div>
-
     </div>
   </div>
-</section>
 
-<footer>
-  <div class="footer-logo">NEX<span style="color:var(--gold)">US</span></div>
-  <div style="font-size:0.8rem;color:var(--text-dim);font-family:'Rajdhani',sans-serif;letter-spacing:1px">
-    Интерактивный прототип — Музей будущего
-  </div>
-  <div class="footer-info">
-    NEXUS MUSEUM // BUILD 3.7.2047<br>
-    AR-СИСТЕМА АКТИВНА // 5 ЗОН ДОСТУПНО
-  </div>
-</footer>
-
-<!-- AR MODAL -->
-<div id="ar-modal" onclick="closeModalOutside(event)">
-  <div class="modal-container">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-
-    <div class="modal-ar-view">
-      <div class="ar-corner ar-corner-tl"></div>
-      <div class="ar-corner ar-corner-tr"></div>
-      <div class="ar-corner ar-corner-bl"></div>
-      <div class="ar-corner ar-corner-br"></div>
-      <div class="ar-scanline"></div>
-
-      <div class="ar-scene">
-        <div class="ar-ring ar-ring-1"></div>
-        <div class="ar-ring ar-ring-2"></div>
-        <div class="ar-ring ar-ring-3"></div>
-        <div class="ar-object" id="modal-emoji">🧠</div>
-      </div>
-
-      <div class="ar-hud">
-        AR-РЕЖИМ АКТИВЕН<br>
-        ОБЪЕКТ ЗАХВАЧЕН<br>
-        ДИСТАНЦИЯ: 1.2м<br>
-        КАЧЕСТВО: ████░ 80%
-      </div>
+  <div class="bottom-nav">
+    <div class="nav-item" onclick="showScreen('home', document.querySelectorAll('.screen-label-btn')[0])">
+      <div class="nav-icon">⊞</div>
+      <div class="nav-label">Главная</div>
     </div>
-
-    <div class="modal-info">
-      <div class="modal-zone" id="modal-zone">ЗАЛ ИИ // E-01</div>
-      <div class="modal-title" id="modal-title">NeuralDream Инсталляция</div>
-      <div class="modal-desc" id="modal-desc">Описание экспоната</div>
-
-      <div class="modal-data" id="modal-data">
-        <div class="data-point">
-          <div class="data-label">Год создания</div>
-          <div class="data-val" id="modal-year">2047</div>
-        </div>
-        <div class="data-point">
-          <div class="data-label">AR-слоёв</div>
-          <div class="data-val" id="modal-layers">12</div>
-        </div>
-        <div class="data-point">
-          <div class="data-label">Интерактивность</div>
-          <div class="data-val" id="modal-interact">Жесты</div>
-        </div>
-        <div class="data-point">
-          <div class="data-label">Возраст 6+</div>
-          <div class="data-val" id="modal-age">✓ Да</div>
-        </div>
-      </div>
-
-      <div class="modal-actions">
-        <button class="btn btn-primary" onclick="closeModal()">⬡ Открыть на карте</button>
-        <button class="btn btn-outline" onclick="closeModal()">Закрыть</button>
-      </div>
+    <div class="nav-item" onclick="showScreen('map', document.querySelectorAll('.screen-label-btn')[2])">
+      <div class="nav-icon">◉</div>
+      <div class="nav-label">Карта</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('ar', document.querySelectorAll('.screen-label-btn')[3])">
+      <div class="nav-icon">⬡</div>
+      <div class="nav-label">AR</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon">◎</div>
+      <div class="nav-label">Профиль</div>
     </div>
   </div>
 </div>
 
 <script>
-// === CURSOR ===
-const cursor = document.getElementById('cursor');
-const cursorDot = document.getElementById('cursor-dot');
-const cursorRing = document.getElementById('cursor-ring');
-let cx=0,cy=0,rx=0,ry=0;
-
-document.addEventListener('mousemove', e => { cx=e.clientX; cy=e.clientY; });
-
-function animCursor() {
-  rx += (cx - rx) * 0.12;
-  ry += (cy - ry) * 0.12;
-  cursorDot.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%)`;
-  cursorRing.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
-  requestAnimationFrame(animCursor);
-}
-animCursor();
-
-document.querySelectorAll('a,button,.exhibit-card,.map-zone,.exhibit-item,.floor-btn,.card-btn').forEach(el => {
-  el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-  el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-});
-
-// === COUNTERS ===
-function animateCount(id, target, suffix='') {
-  let cur = 0; const step = target / 60;
-  const el = document.getElementById(id);
-  const iv = setInterval(() => {
-    cur = Math.min(cur + step, target);
-    el.textContent = Math.round(cur) + suffix;
-    if (cur >= target) clearInterval(iv);
-  }, 20);
-}
-setTimeout(() => {
-  animateCount('cnt1', 147);
-  animateCount('cnt2', 89);
-  animateCount('cnt3', 5);
-  animateCount('cnt4', '12K');
-}, 400);
-
-// === MAP ZONES ===
-const zoneColors = {
-  ai: 'var(--cyan)',
-  bio: 'var(--green)',
-  space: 'var(--magenta)',
-  time: 'var(--gold)',
-  quantum: '#a855f7'
+// Screens mapping
+const screens = {
+  home: 'phone-home',
+  detail: 'phone-detail',
+  map: 'phone-map',
+  ar: 'phone-ar',
+  profile: 'phone-profile'
 };
 
-function selectZone(id) {
-  document.querySelectorAll('.map-zone').forEach(z => z.classList.remove('active'));
-  document.getElementById('zone-' + id).classList.add('active');
-
-  document.querySelectorAll('.zone-info').forEach(z => z.classList.remove('visible'));
-  document.getElementById('zone-default-info').style.display = 'none';
-  document.getElementById('info-' + id).classList.add('visible');
+function showScreen(id, labelEl) {
+  // Hide all phones
+  document.querySelectorAll('.phone').forEach(p => p.classList.remove('active'));
+  document.getElementById(screens[id]).classList.add('active');
+  // Update labels
+  document.querySelectorAll('.screen-label-btn').forEach(b => b.classList.remove('active'));
+  if (labelEl) labelEl.classList.add('active');
 }
 
-// === MODAL DATA ===
-const exhibits = {
-  neural: {
-    emoji: '🧠', zone: 'ЗАЛ ИИ // E-01', color: 'var(--cyan)',
-    title: 'NeuralDream Инсталляция',
-    desc: 'Реальная визуализация обучения нейросети на 50 миллиардах параметров. Вы видите, как абстрактные паттерны превращаются в понятия — прямо перед вами. Управляйте жестами, «замораживайте» слои, смотрите активации нейронов.',
-    year:'2047', layers:'12', interact:'Жесты', age:'✓ 8+'
-  },
-  robot: {
-    emoji: '🤖', zone: 'ЗАЛ ИИ // E-02', color: 'var(--cyan)',
-    title: 'Робот ARIA-7',
-    desc: 'Полноразмерный AR-робот с эмоциональным интеллектом. Задавайте вопросы — ARIA отвечает с учётом вашего настроения, считанного по выражению лица.',
-    year:'2045', layers:'8', interact:'Голос', age:'✓ Все'
-  },
-  mars: {
-    emoji: '🔴', zone: 'КОСМОС // E-07', color: 'var(--magenta)',
-    title: 'Марсианская База «Заря»',
-    desc: 'Войдите внутрь первой марсианской колонии. AR накладывает полноразмерные модули Базы Заря поверх реального пространства зала. Интерактивная экскурсия с AI-космонавтом Владимиром.',
-    year:'2041', layers:'24', interact:'Ходьба+жесты', age:'✓ 6+'
-  },
-  dna: {
-    emoji: '🧬', zone: 'БИОТЕХ // E-04', color: 'var(--green)',
-    title: 'Двойная спираль XL',
-    desc: 'Трёхметровая интерактивная модель ДНК с атомарным разрешением. Выберите ген, «отредактируйте» его через CRISPR-интерфейс и наблюдайте каскадные изменения в организме.',
-    year:'2044', layers:'18', interact:'Жесты', age:'✓ 10+'
-  },
-  nano: {
-    emoji: '🔬', zone: 'БИОТЕХ // E-05', color: 'var(--green)',
-    title: 'Нанороботы-целители',
-    desc: 'Увеличенные в 1 000 000 раз нанороботы ориентируются в сосудах человеческого тела. Управляйте стаей из 100 роботов, доставляя лекарство к опухоли — в режиме реального времени.',
-    year:'2039', layers:'10', interact:'Тач+жесты', age:'✓ 12+'
-  },
-  time: {
-    emoji: '⏳', zone: 'ВРЕМЯ & ФИЗИКА // E-10', color: 'var(--gold)',
-    title: 'Машина времени Эйнштейна',
-    desc: 'Ощутите замедление времени: AR-симуляция на скорости 0.99с показывает, как часы в руке идут медленнее часов на стене. Парадокс близнецов — в 3D.',
-    year:'1905', layers:'7', interact:'Голос+жесты', age:'✓ 14+'
-  },
-  quantum: {
-    emoji: '🐈', zone: 'КВАНТУМ // E-12', color: '#a855f7',
-    title: 'Кот Шрёдингера',
-    desc: 'Пока вы не смотрите — кот существует в суперпозиции живого и мёртвого. Только направив взгляд (и камеру) в ящик, вы «схлопываете» волновую функцию. Каждый раз — новый результат.',
-    year:'1935', layers:'6', interact:'Взгляд', age:'✓ Все'
-  },
-  gpt: {
-    emoji: '💬', zone: 'ЗАЛ ИИ // E-03', color: 'var(--cyan)',
-    title: 'Диалог с GPT-∞',
-    desc: 'Разговор с языковой моделью следующего поколения. GPT-∞ обучена на всём, что создало человечество. Задайте любой вопрос — от философии до квантовой физики.',
-    year:'2046', layers:'4', interact:'Голос', age:'✓ Все'
-  }
-};
-
-function openModal(id) {
-  const d = exhibits[id] || exhibits.neural;
-  document.getElementById('modal-emoji').textContent = d.emoji;
-  document.getElementById('modal-zone').textContent = d.zone;
-  document.getElementById('modal-title').textContent = d.title;
-  document.getElementById('modal-desc').textContent = d.desc;
-  document.getElementById('modal-year').textContent = d.year;
-  document.getElementById('modal-layers').textContent = d.layers;
-  document.getElementById('modal-interact').textContent = d.interact;
-  document.getElementById('modal-age').textContent = d.age;
-
-  // Update colors
-  const style = document.getElementById('ar-modal');
-  document.querySelectorAll('.ar-ring, .ar-corner, .ar-hud, .modal-zone').forEach(el => {
-    el.style.color = d.color;
-    el.style.borderColor = d.color;
-  });
-  document.querySelectorAll('.data-point').forEach(el => {
-    el.style.borderLeftColor = d.color;
-  });
-
-  document.getElementById('ar-modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
+function selectRoom(el) {
+  document.querySelectorAll('.map-room').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
 }
 
-function closeModal() {
-  document.getElementById('ar-modal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('ar-modal')) closeModal();
-}
-
-document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
-
-// Floor buttons
-document.querySelectorAll('.floor-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.floor-btn').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
-  });
-});
-
-// Scroll-triggered entrance animations
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, {threshold: 0.1});
-
-document.querySelectorAll('.exhibit-card, .ar-step, .story-card, .stat-item').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(24px)';
-  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  observer.observe(el);
-});
+// AR Particles
+(function spawnParticles() {
+  const container = document.getElementById('particles');
+  if (!container) return;
+  setInterval(() => {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 2;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;
+      bottom:${Math.random()*20}%;
+      animation-duration:${Math.random()*3+2}s;
+      animation-delay:${Math.random()*2}s;
+    `;
+    container.appendChild(p);
+    setTimeout(() => p.remove(), 5000);
+  }, 300);
+})();
 </script>
 </body>
 </html>
